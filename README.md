@@ -37,7 +37,7 @@ The source is at [github.com/flybylow/fingerprint](https://github.com/flybylow/f
 
 ## The experience
 
-1. **Homepage.** The eyebrow is "Fingerprint · device intelligence". The title is **Every device leaves a fingerprint.** Under it: "Every visitor is unique and identifiable, even anonymous ones. Reveal the fingerprint we compute from your browser." The field is many thin gray lines on a fixed center, bent slightly so they are not perfect circles, darker toward the middle so the type stays readable. They drift outward with the homepage pad, and the pointer dents them. Two actions: **Show your fingerprint →** and **or visit as an AI agent**.
+1. **Homepage.** The eyebrow is "Fingerprint · device intelligence". The title is **Every device leaves a fingerprint.** Under it: "Every visitor is unique and identifiable, even anonymous ones. Reveal the fingerprint we compute from your browser." The field is many thin gray lines on a fixed center, bent slightly so they are not perfect circles, darker toward the middle so the type stays readable. They drift outward with the homepage pad, and the pointer dents them. Three actions: **Show your fingerprint →**, **or visit as an AI agent**, and **More about me →**, which opens the portfolio.
 
 2. **A person.** The title becomes **This is your device, computed in real time.** The line under it is "Your unique fingerprint, computed from the signals in the panel." Color arrives with the warp: the rings tighten, shift off center, and bend into a whorl seeded by the visitor ID. About 1,800 particles lift off the field and fade into the card. Closing the card does not send them back. The card shows the visitor ID, a confidence bar, location when the server has it, and Smart Signals. A collapsed raw event sits under the chips for engineers.
 
@@ -75,14 +75,9 @@ The agent starts on the reveal click, not on page load. The `visitor_id` only se
 ## Project layout
 
 ```
-app/
-  layout.tsx              root shell (fonts). The agent does not start here.
-  page.tsx                renders <Experience/>
-  api/identify/route.ts   server: secret-key Server API call
-  components/
-    Experience.tsx        identify → enrich → render
-    SignalPortrait.tsx    three.js + GLSL field and particle flight
-    SignalsPanel.tsx      visitor id, confidence, Smart Signals
+app/                      Signal Portrait, the Next.js demo at /
+portfolio/                Astro case-study site, served at /portfolio
+  src/                    Alba theme, reskinned, Ward's case studies
 lib/
   signals.ts              types, deterministic seed, server-event normalization
   audio.ts                WebAudio beds (home, welcome, bot)

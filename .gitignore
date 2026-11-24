@@ -7,6 +7,12 @@
 /.next/
 /out/
 
+# Astro portfolio build, written into Next's public folder
+/public/portfolio
+/portfolio/node_modules
+/portfolio/.astro
+/portfolio/dist
+
 # misc
 .DS_Store
 *.pem
