@@ -9,7 +9,7 @@
 - [PRD.md](PRD.md) — Signal Portrait brief: Fingerprint design-engineer prototype, scope, stack, acceptance.
 - [BRAND.md](BRAND.md) — palette, type, and how this demo sits against fingerprint.com.
 - [portrait.md](portrait.md) — how a visitor ID becomes the ridge shape, the colors, and the particle morph into the card.
-- [shot-entry.png](shot-entry.png), [shot-bridge.png](shot-bridge.png), [shot-bot.png](shot-bot.png) — stills of entry, the particle bridge, and the bot state.
+- [home.png](home.png), [identified.png](identified.png), [bot.png](bot.png) — homepage, the identified portrait, and the bot state.
 
 ## Working notes
 

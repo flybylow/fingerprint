@@ -4,15 +4,15 @@ An interactive demo of Fingerprint device intelligence. The page opens on a gene
 
 Humans get a warm, colored whorl. A detected bot, or a visit chosen as an AI agent, gets a corrupted red one.
 
-![Homepage](docs/shot-entry.png)
+![Homepage](docs/home.png)
 
 *Homepage. Thin gray rings, not yet a fingerprint.*
 
-![Identified](docs/shot-bridge.png)
+![Identified](docs/identified.png)
 
 *After the click. The rings have tightened into this device's portrait, and the panel shows the signals it was computed from.*
 
-![Bot](docs/shot-bot.png)
+![Bot](docs/bot.png)
 
 *A bot visit. The same field, glitched.*
 
