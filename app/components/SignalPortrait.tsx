@@ -63,15 +63,18 @@ const FRAG = /* glsl */ `
     float calm=1.0-personal;
     float rad0=length(p);
     vec2 niggle=vec2(fbm(p*0.65+1.3),fbm(p*0.65+vec2(4.1,2.2)))-0.5;
-    vec2 bowed=p+niggle*0.2*calm*rad0;
+    // homepage only: rings lean toward the cursor, never far enough to fold
+    float mag=min(md*0.8,0.42*exp(-md*0.45));
+    vec2 dent=normalize(toMouse+1e-4)*uMouseStr*mag*calm;
+    vec2 bowed=p+niggle*0.2*calm*rad0-dent;
     vec2 fc=vec2(uSeed.x-0.5,uSeed.y-0.5)*0.5*personal;
-    float radial=length(bowed-fc)*mix(4.6,9.0,personal);
+    float radial=length(bowed-fc)*mix(12.0,9.0,personal);
     float freq=8.0+uSeed.x*4.0;
     // generic rings travel outward once per pad beat (55 Hz against 55.4 Hz)
     float drift=mix(0.40,0.05,personal);
     float v=radial+f*mix(0.1,freq*0.5,personal)+md*(0.5+uPerturb*2.0)*personal-t*drift;
     float gg=fract(v); float dl=min(gg,1.0-gg);
-    float aa=fwidth(v)*0.9+0.0015; float lw=mix(0.03,0.14,personal);
+    float aa=fwidth(v)*0.9+0.0015; float lw=mix(0.012,0.14,personal);
     float line=1.0-smoothstep(lw,lw+aa*1.6,dl);
     float soft=smoothstep(0.35,0.65,f)*0.6;
     float structure=mix(line,mix(soft,line,clamp(uIntro,0.0,1.0)),personal);
@@ -242,6 +245,7 @@ export default function SignalPortrait(props: SignalPortraitProps) {
     }
     const onLeave = () => { st.strT = 0; };
     mount.addEventListener("pointermove", onPointer);
+    mount.addEventListener("pointerdown", onPointer);
     mount.addEventListener("pointerleave", onLeave);
 
     const clock = new THREE.Clock();
@@ -283,6 +287,7 @@ export default function SignalPortrait(props: SignalPortraitProps) {
     return () => {
       cancelAnimationFrame(raf); ro.disconnect();
       mount.removeEventListener("pointermove", onPointer);
+      mount.removeEventListener("pointerdown", onPointer);
       mount.removeEventListener("pointerleave", onLeave);
       pg.dispose(); pmat.dispose(); material.dispose(); renderer.dispose();
       if (renderer.domElement.parentNode === mount) mount.removeChild(renderer.domElement);

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "motion/react";
 import type { IdentifyResult } from "@/lib/signals";
 import { shortId } from "@/lib/signals";
@@ -21,6 +22,7 @@ const item = {
 };
 
 export default function SignalsPanel({ result, loading, onSignalHover, onClose }: Props) {
+  const [showRaw, setShowRaw] = useState(false);
   const confidence = result?.confidence != null ? Math.max(0, Math.min(1, result.confidence)) : null;
   return (
     <motion.aside
@@ -82,6 +84,16 @@ export default function SignalsPanel({ result, loading, onSignalHover, onClose }
         </motion.p>
       )}
 
+      {result?.raw != null && (
+        <motion.div variants={item} className="raw">
+          <button type="button" className="raw-toggle mono" onClick={() => setShowRaw((v) => !v)}>
+            {showRaw ? "− hide raw event" : "+ raw event (for engineers)"}
+          </button>
+          {showRaw && (
+            <pre className="raw-pre mono">{JSON.stringify(result.raw, null, 2)}</pre>
+          )}
+        </motion.div>
+      )}
     </motion.aside>
   );
 }
