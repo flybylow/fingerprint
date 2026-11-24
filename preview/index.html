@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Signal Portrait — preview</title>
+<style>
+  :root{
+    --bg:#0a0a0b;--bg-raise:#141416;--fg:#f5f3f0;--fg-dim:#9a968f;
+    --accent:#ff5d22;--accent-2:#ffb38a;--warn:#ff3b3b;--ok:#39d98a;
+    --line:rgba(245,243,240,0.09);
+    --sans:"Geist",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:var(--fg);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+  .mono{font-family:var(--mono)}
+  .small-caps{text-transform:uppercase;letter-spacing:.14em;font-size:.68rem}
+  .stage{position:relative;width:100%;min-height:100dvh;overflow:hidden}
+  #gl{position:absolute;inset:0;z-index:0;display:block;width:100%;height:100%}
+  .scrim{position:absolute;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(120% 90% at 30% 50%,rgba(10,10,11,0) 0%,rgba(10,10,11,.55) 70%,rgba(10,10,11,.85) 100%)}
+  .overlay{position:relative;z-index:1;min-height:100dvh;display:grid;
+    grid-template-columns:1fr minmax(300px,360px);align-items:center;gap:2rem;
+    padding:clamp(1.5rem,5vw,5rem);pointer-events:none}
+  .overlay>*{pointer-events:auto}
+  .hero{max-width:34rem;opacity:0;transform:translateY(12px);animation:rise .8s .1s cubic-bezier(.16,1,.3,1) forwards}
+  .eyebrow{color:var(--accent);display:block;margin-bottom:1.25rem}
+  .title{font-size:clamp(2.2rem,6vw,4.2rem);line-height:1.02;letter-spacing:-.03em;font-weight:600;margin-bottom:1.25rem}
+  .title .accent{color:var(--accent)}
+  .sub{color:var(--fg-dim);font-size:clamp(.95rem,1.5vw,1.1rem);line-height:1.6;max-width:30rem}
+  .cta-wrap{margin-top:2rem;display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap}
+  .cta-wrap.gone{display:none}
+  .cta{display:inline-flex;align-items:center;gap:.6rem;background:var(--accent);color:#120a06;border:none;
+    font:inherit;font-weight:600;font-size:.95rem;padding:.85rem 1.4rem;border-radius:999px;cursor:pointer;
+    transition:transform .2s,box-shadow .2s;box-shadow:0 0 0 0 rgba(255,93,34,.5)}
+  .cta:hover{transform:translateY(-2px);box-shadow:0 14px 44px -10px rgba(255,93,34,.7)}
+  .cta-arrow{transition:transform .2s}.cta:hover .cta-arrow{transform:translateX(4px)}
+  .cta-ghost{background:none;border:none;color:var(--fg-dim);font:inherit;font-size:.85rem;cursor:pointer;
+    text-decoration:underline;text-underline-offset:3px;transition:color .2s}
+  .cta-ghost:hover{color:var(--fg)}
+  .panel{background:color-mix(in srgb,var(--bg-raise) 72%,transparent);backdrop-filter:blur(14px);
+    border:1px solid var(--line);border-radius:16px;padding:1.4rem;justify-self:end;width:100%;
+    opacity:0;transform:translateY(12px);pointer-events:none}
+  .panel.show{animation:rise .7s cubic-bezier(.16,1,.3,1) forwards;pointer-events:auto}
+  .row{display:flex;justify-content:space-between;align-items:baseline;padding:.5rem 0}
+  .label{color:var(--fg-dim);font-size:.8rem}
+  .row .mono{font-size:.82rem}.id{color:var(--accent-2)}
+  .divider{height:1px;background:var(--line);margin:.75rem 0 1rem}
+  .chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.75rem}
+  .chip{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem .7rem;border-radius:999px;
+    border:1px solid var(--line);background:rgba(255,255,255,.02);font-size:.78rem;cursor:default;
+    transition:transform .2s,border-color .2s}
+  .chip:hover{transform:translateY(-1px);border-color:color-mix(in srgb,var(--accent) 50%,var(--line))}
+  .chip .dot{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+  .chip .cv{color:var(--ok)}
+  .chip.warn .dot{background:var(--warn)}.chip.warn .cv{color:var(--warn)}
+  .note{color:var(--fg-dim);font-size:.72rem;line-height:1.5;margin-top:1rem}
+  .controls{position:fixed;bottom:1.25rem;left:1.25rem;z-index:2;display:flex;gap:.6rem;align-items:center}
+  .sound,.sim{background:color-mix(in srgb,var(--bg-raise) 70%,transparent);backdrop-filter:blur(10px);
+    border:1px solid var(--line);border-radius:999px;font-size:.72rem}
+  .sound{color:var(--fg-dim);padding:.5rem .85rem;cursor:pointer}
+  .sim{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .4rem .3rem .7rem}
+  .sim-label{color:var(--fg-dim);margin-right:.2rem}
+  .sim button{background:none;border:none;color:var(--fg-dim);font:inherit;padding:.25rem .6rem;border-radius:999px;cursor:pointer;transition:.2s}
+  .sim button:hover{color:var(--fg)}.sim button.on{color:var(--bg);background:var(--accent)}
+  .badge{position:fixed;top:1.1rem;right:1.25rem;z-index:2;color:var(--fg-dim);font-size:.68rem;border:1px solid var(--line);border-radius:999px;padding:.35rem .7rem}
+  @keyframes rise{to{opacity:1;transform:none}}
+  @media(max-width:860px){.overlay{grid-template-columns:1fr;align-content:space-between;padding:1.5rem}.hero{margin-top:2rem}.panel{justify-self:stretch}}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <canvas id="gl"></canvas>
+    <div class="scrim"></div>
+    <div class="overlay">
+      <header class="hero" id="hero">
+        <span class="eyebrow small-caps" id="eyebrow">Fingerprint · device intelligence</span>
+        <h1 class="title" id="title">This is <span class="accent">your device</span>,<br/>computed in real time.</h1>
+        <p class="sub" id="sub">Every visitor is unique and identifiable — even anonymous ones. Reveal the signature we compute from your browser.</p>
+        <div class="cta-wrap" id="ctaWrap">
+          <button class="cta" id="ctaHuman">Show your fingerprint <span class="cta-arrow">→</span></button>
+          <button class="cta-ghost" id="ctaAgent">or visit as an AI agent</button>
+        </div>
+      </header>
+      <aside class="panel" id="panel">
+        <div class="row"><span class="label">Visitor ID</span><span class="mono id">4f9ab2…c2e1</span></div>
+        <div class="row"><span class="label">Confidence</span><span class="mono">99.8%</span></div>
+        <div class="row"><span class="label">Location</span><span class="mono">Bruges, Belgium</span></div>
+        <div class="divider"></div>
+        <div class="label small-caps">Smart Signals</div>
+        <div class="chips">
+          <div class="chip" id="chipBot"><span class="dot"></span>Automation<span class="cv mono">no</span></div>
+          <div class="chip"><span class="dot"></span>Incognito<span class="cv mono">no</span></div>
+          <div class="chip"><span class="dot"></span>VPN<span class="cv mono">no</span></div>
+          <div class="chip"><span class="dot"></span>Proxy<span class="cv mono">no</span></div>
+          <div class="chip"><span class="dot"></span>Tampering<span class="cv mono">no</span></div>
+        </div>
+        <p class="note">Static preview — the live version computes this from your real device via Fingerprint's SDK.</p>
+      </aside>
+    </div>
+    <div class="controls">
+      <div class="sim mono"><span class="sim-label">simulate</span><button id="simHuman">human</button><button id="simBot">bot</button></div>
+      <button class="sound" id="sound">▶ sound</button>
+    </div>
+    <div class="badge mono">preview</div>
+  </div>
+
+<script type="module">
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js";
+
+/* ---------- field shader (the fingerprint) ---------- */
+const FRAG=`
+precision highp float; varying vec2 vUv;
+uniform float uTime; uniform vec2 uRes; uniform vec3 uSeed;
+uniform vec2 uMouse; uniform float uMouseStr; uniform float uIntro;
+uniform float uSuspect; uniform float uPerturb; uniform float uGlitch; uniform float uDim;
+float hash(vec2 p){p=fract(p*vec2(123.34,345.45));p+=dot(p,p+34.345);return fract(p.x*p.y);}
+float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);
+  float a=hash(i),b=hash(i+vec2(1,0)),c=hash(i+vec2(0,1)),d=hash(i+vec2(1,1));
+  return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);}
+float fbm(vec2 p){float v=0.0,a=0.5;for(int i=0;i<5;i++){v+=a*noise(p);p*=2.02;a*=0.5;}return v;}
+vec3 pal(float t){vec3 a=vec3(0.52,0.30,0.34);vec3 b=vec3(0.50,0.34,0.28);
+  vec3 c=vec3(1.0,0.92,0.84);vec3 d=vec3(0.0,0.11,0.62);return a+b*cos(6.28318*(c*t+d));}
+void main(){
+  float t=uTime; vec2 uv=vUv; vec2 p=(uv-0.5); p.x*=uRes.x/uRes.y; p*=2.0;
+  if(uGlitch>0.001){float row=floor(uv.y*70.0);float jump=step(0.72,hash(vec2(row,floor(t*9.0))));
+    float amt=(hash(vec2(row,floor(t*13.0)))-0.5);p.x+=amt*jump*uGlitch*0.3;}
+  vec2 toMouse=uMouse-p; float md=length(toMouse);
+  vec2 lean=normalize(toMouse+1e-4)*uMouseStr*0.35*exp(-md*1.1);
+  float flow=t*0.04; vec2 q=p*1.4+lean+uSeed.xy*6.0;
+  vec2 w1=vec2(fbm(q+flow),fbm(q+vec2(5.2,1.3)-flow));
+  float warpAmt=1.6+uPerturb*1.2;
+  vec2 w2=vec2(fbm(q+warpAmt*w1+1.7),fbm(q+warpAmt*w1+9.2));
+  float f=fbm(q+warpAmt*w2+uSeed.z*3.0);
+  float freq=10.0+uSeed.x*7.0;
+  float v=f*freq+md*(0.6+uPerturb*2.0)-t*0.05;
+  float tri=abs(fract(v)-0.5)*2.0; float aa=fwidth(v)*1.5+0.001;
+  float ridge=smoothstep(0.5-aa,0.5+aa,tri);
+  float structure=mix(smoothstep(0.3,0.7,f),ridge,clamp(uIntro,0.0,1.0));
+  float reveal=smoothstep(uIntro*1.5-0.4,uIntro*1.5,1.0-length(p)*0.5);
+  structure*=mix(0.55,1.0,reveal);
+  float tone=f*0.6+structure*0.4+uSeed.y*0.3+flow;
+  vec3 col=pal(tone);
+  col=mix(col,vec3(1.0,0.365,0.133),structure*0.26*(0.6+0.4*uIntro));
+  col=mix(col,vec3(1.0,0.23,0.23),uSuspect*structure*0.6);
+  col*=0.42+0.9*structure; col=pow(col,vec3(0.9));
+  float g=hash(uv*uRes+t*60.0); col+=(g-0.5)*0.045;
+  if(uGlitch>0.001){vec3 split=vec3(pal(tone+0.06*uGlitch).r,col.g,pal(tone-0.06*uGlitch).b);
+    col=mix(col,split,0.6*uGlitch);col+=vec3(1.0,0.22,0.10)*(structure*0.9+0.10)*uGlitch;
+    float scan=0.88+0.12*sin(uv.y*uRes.y*0.5);col*=mix(1.0,scan,uGlitch);
+    col+=(hash(uv*uRes+t*140.0)-0.5)*0.12*uGlitch;}
+  float vig=smoothstep(1.3,0.2,length(p)); col*=0.25+0.75*vig; col*=uDim;
+  gl_FragColor=vec4(col,1.0);
+}`;
+const VERT=`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`;
+
+/* ---------- particle bridge (fingerprint → panel) ---------- */
+const PVERT=`
+attribute vec2 aStart; attribute float aSeed;
+uniform float uProg; uniform float uTime; uniform vec2 uTarget; uniform float uPixelRatio;
+varying float vA; varying float vSeed;
+void main(){
+  float cp=clamp(uProg,0.0,1.0); float e=cp*cp*(3.0-2.0*cp);
+  vec2 tgt=uTarget+vec2((fract(aSeed*13.1)-0.5)*0.10,(fract(aSeed*7.7)-0.5)*0.48);
+  vec2 pos=mix(aStart,tgt,e);
+  float w=1.0-e;
+  pos+=vec2(sin(aSeed*25.0+uTime*1.5),cos(aSeed*19.0+uTime*1.3))*0.10*w;
+  gl_Position=projectionMatrix*modelViewMatrix*vec4(pos,0.0,1.0);
+  float env=smoothstep(0.0,0.14,uProg)*(1.0-smoothstep(0.72,1.0,uProg));
+  vA=env*(0.45+0.55*fract(aSeed*91.0)); vSeed=aSeed;
+  gl_PointSize=(2.5+7.0*fract(aSeed*53.0))*uPixelRatio*(0.5+0.9*w);
+}`;
+const PFRAG=`
+precision highp float; varying float vA; varying float vSeed; uniform float uBot;
+void main(){vec2 c=gl_PointCoord-0.5;float d=length(c);float a=smoothstep(0.5,0.0,d)*vA*1.4;
+  vec3 warm=mix(vec3(1.0,0.88,0.6),vec3(1.0,1.0,1.0),fract(vSeed*17.0));
+  vec3 col=mix(warm,vec3(1.0,0.32,0.2),uBot);
+  gl_FragColor=vec4(col*1.3,a);}`;
+
+/* ---------- setup ---------- */
+const canvas=document.getElementById("gl");
+const renderer=new THREE.WebGLRenderer({canvas,antialias:false});
+renderer.setClearColor(0x0a0a0b,1);
+const dpr=Math.min(window.devicePixelRatio||1,2); renderer.setPixelRatio(dpr);
+const scene=new THREE.Scene();
+const camera=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+function seedFrom(str){let s=0x811c9dc5;for(let i=0;i<str.length;i++){s^=str.charCodeAt(i);s=Math.imul(s,0x01000193);}s>>>=0;
+  const o=[];for(let i=0;i<3;i++){s^=s<<13;s^=s>>>17;s^=s<<5;s>>>=0;o.push(s/0xffffffff);}return o;}
+const sd=seedFrom("4f9ab2c2e1-demo");
+const u={uTime:{value:0},uRes:{value:new THREE.Vector2(1,1)},
+  uSeed:{value:new THREE.Vector3(sd[0],sd[1],sd[2])},
+  uMouse:{value:new THREE.Vector2(0,0)},uMouseStr:{value:0},
+  uIntro:{value:0},uSuspect:{value:0},uPerturb:{value:0},uGlitch:{value:0},uDim:{value:1}};
+const mat=new THREE.ShaderMaterial({vertexShader:VERT,fragmentShader:FRAG,uniforms:u});
+scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),mat));
+
+// particles
+const N=1500;
+const starts=new Float32Array(N*2), seeds=new Float32Array(N);
+for(let i=0;i<N;i++){
+  // bias toward the fingerprint (center-right), with spread
+  const rx=(Math.random()+Math.random()-1), ry=(Math.random()+Math.random()-1);
+  starts[i*2]=rx*0.9+0.15; starts[i*2+1]=ry*0.85; seeds[i]=Math.random();
+}
+const pg=new THREE.BufferGeometry();
+pg.setAttribute('position',new THREE.BufferAttribute(new Float32Array(N*3),3));
+pg.setAttribute('aStart',new THREE.BufferAttribute(starts,2));
+pg.setAttribute('aSeed',new THREE.BufferAttribute(seeds,1));
+const pu={uProg:{value:0},uTime:{value:0},uTarget:{value:new THREE.Vector2(0.62,0.0)},uPixelRatio:{value:dpr},uBot:{value:0}};
+const pmat=new THREE.ShaderMaterial({uniforms:pu,vertexShader:PVERT,fragmentShader:PFRAG,
+  transparent:true,depthTest:false,depthWrite:false,blending:THREE.AdditiveBlending});
+const points=new THREE.Points(pg,pmat); points.frustumCulled=false; scene.add(points);
+
+function resize(){const w=canvas.clientWidth||innerWidth,h=canvas.clientHeight||innerHeight;
+  renderer.setSize(w,h,false);u.uRes.value.set(w*dpr,h*dpr);}
+new ResizeObserver(resize).observe(canvas); resize();
+
+const st={mx:0,my:0,mxT:0,myT:0,str:0,strT:0,intro:0.3,introT:0.3,glitch:0,glitchT:0,suspectT:0,
+  revealing:false,revealT0:0,progForce:0,started:false,freeze:false};
+addEventListener("pointermove",e=>{const r=canvas.getBoundingClientRect();
+  st.mxT=((e.clientX-r.left)/r.width*2-1)*(r.width/r.height);
+  st.myT=-((e.clientY-r.top)/r.height*2-1);st.strT=1;});
+addEventListener("pointerout",()=>st.strT=0);
+
+const clock=new THREE.Clock();
+function frame(){requestAnimationFrame(frame);const dt=Math.min(clock.getDelta(),0.05);const t=clock.elapsedTime;
+  st.mx+=(st.mxT-st.mx)*Math.min(1,dt*6);st.my+=(st.myT-st.my)*Math.min(1,dt*6);
+  st.str+=(st.strT-st.str)*Math.min(1,dt*4);st.intro+=(st.introT-st.intro)*Math.min(1,dt*1.6);
+  st.glitch+=(st.glitchT-st.glitch)*Math.min(1,dt*3.5);
+  u.uSuspect.value+=(st.suspectT-u.uSuspect.value)*Math.min(1,dt*3);
+  u.uTime.value=t;u.uMouse.value.set(st.mx,st.my);u.uMouseStr.value=st.str;u.uIntro.value=st.intro;u.uGlitch.value=st.glitch;
+  pu.uTime.value=t;
+  pu.uProg.value=st.freeze?st.progForce:(st.revealing?Math.min(1,(t-st.revealT0)/1.5):st.progForce);
+  const pr=pu.uProg.value; const act=(st.started&&pr>0.0&&pr<1.0)?Math.sin(Math.PI*Math.min(1,pr/0.85)):0;
+  u.uDim.value=1-0.25*act;
+  renderer.render(scene,camera);}
+frame();
+
+/* ---------- copy swap + reveal flow ---------- */
+const eyebrow=document.getElementById("eyebrow"),titleEl=document.getElementById("title"),
+  sub=document.getElementById("sub"),chipBot=document.getElementById("chipBot"),
+  simHuman=document.getElementById("simHuman"),simBot=document.getElementById("simBot"),
+  panel=document.getElementById("panel"),ctaWrap=document.getElementById("ctaWrap");
+let mode="auto";
+function applyCopy(bot){
+  simHuman.classList.toggle("on",mode==="human");simBot.classList.toggle("on",mode==="bot");
+  if(bot){eyebrow.textContent="Fingerprint · AI agent detection";
+    titleEl.innerHTML='Nice try, <span class="accent">robot</span>.';
+    sub.innerHTML="You read as automation — the one visitor we don't roll out the carpet for. This is what a corrupted signal looks like. Humans only past here. 🤖";
+    chipBot.classList.add("warn");chipBot.innerHTML='<span class="dot"></span>Automation<span class="cv mono">yes</span>';
+  }else{eyebrow.textContent="Fingerprint · device intelligence";
+    titleEl.innerHTML='This is <span class="accent">your device</span>,<br/>computed in real time.';
+    sub.textContent="Every visitor is unique and identifiable — even anonymous ones. The portrait on this screen is generated from your own device signature.";
+    chipBot.classList.remove("warn");chipBot.innerHTML='<span class="dot"></span>Automation<span class="cv mono">no</span>';}
+}
+function setMode(m){mode=(mode===m)?"auto":m;const bot=mode==="bot";
+  st.glitchT=bot?1:0;st.suspectT=bot?1:0;st.introT=1;pu.uBot.value=bot?1:0;applyCopy(bot);}
+
+function startReveal(kind){
+  if(st.started)return;st.started=true;
+  const bot=kind==="bot";
+  ctaWrap.classList.add("gone");
+  mode=bot?"bot":"human";const _=mode; // reflect in toggle
+  st.glitchT=bot?1:0;st.suspectT=bot?1:0;st.introT=1;pu.uBot.value=bot?1:0;
+  applyCopy(bot);
+  panel.classList.add("show");
+  requestAnimationFrame(()=>{
+    const r=panel.getBoundingClientRect();
+    const cx=(r.left+24)/innerWidth*2-1;                 // panel LEFT edge — stay visible
+    const cy=-(((r.top+r.height/2)/innerHeight)*2-1);
+    pu.uTarget.value.set(cx,cy);
+    st.revealT0=clock.elapsedTime; if(!st.freeze) st.revealing=true;
+  });
+}
+document.getElementById("ctaHuman").onclick=()=>startReveal("human");
+document.getElementById("ctaAgent").onclick=()=>startReveal("bot");
+// post-reveal simulate switch
+simHuman.onclick=()=>{setMode("human");};
+simBot.onclick=()=>{setMode("bot");};
+
+/* ---------- minimal sound (gesture-gated) ---------- */
+let actx,amb;const btn=document.getElementById("sound");
+btn.onclick=()=>{if(!actx){actx=new (window.AudioContext||window.webkitAudioContext)();
+    const o=actx.createOscillator(),o2=actx.createOscillator(),lp=actx.createBiquadFilter(),g=actx.createGain();
+    o.frequency.value=55;o2.frequency.value=55.4;lp.type="lowpass";lp.frequency.value=380;
+    g.gain.setValueAtTime(0.0001,actx.currentTime);g.gain.exponentialRampToValueAtTime(0.05,actx.currentTime+2);
+    o.connect(lp);o2.connect(lp);lp.connect(g).connect(actx.destination);o.start();o2.start();amb=g;btn.textContent="◼ sound on";}
+  else{if(amb){amb.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+0.4);amb=null;btn.textContent="▶ sound";}
+    else{amb=1;btn.textContent="◼ sound on";}}};
+
+/* ---------- screenshot / deep-link overrides: ?reveal=human|bot&prog=0..1 ---------- */
+const q=new URLSearchParams(location.search);
+const rv=q.get("reveal")||(q.get("mode")==="bot"?"bot":null);
+if(rv){const pf=q.get("prog");
+  if(pf!==null){st.freeze=true;st.progForce=parseFloat(pf);st.intro=1;u.uIntro.value=1;st.introT=1;}
+  startReveal(rv==="bot"?"bot":"human");}
+</script>
+</body>
+</html>
