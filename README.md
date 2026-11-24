@@ -1,41 +1,55 @@
 # Signal Portrait
 
-An interactive demo of Fingerprint device intelligence: your visitor identity,
-rendered live as a generative WebGL signal field. Built for Ward's application to
-the **Design Engineer** role at Fingerprint.
+An interactive demo of Fingerprint device intelligence. The page opens on a generic field. After you ask, it identifies the browser and draws that visitor as a generative WebGL portrait. Built for Ward's application to the **Design Engineer** role at Fingerprint.
 
-> **The idea:** a fingerprint is a flow field. This renders *your* visitor ID as
-> one — so the abstract identifier becomes something organic and singular, about
-> the person looking at it. Humans get an elegant portrait; detected bots/AI
-> agents get a **corrupted** one.
+Humans get a warm, colored whorl. A detected bot, or a visit chosen as an AI agent, gets a corrupted red one.
 
-![entry](docs/shot-entry.png)
-![particle bridge](docs/shot-bridge.png)
-![bot state](docs/shot-bot.png)
+![Homepage](docs/shot-entry.png)
 
-## Run it (≈2 minutes)
+*Homepage. Thin gray rings, not yet a fingerprint.*
+
+![Identified](docs/shot-bridge.png)
+
+*After the click. The rings have tightened into this device's portrait, and the panel shows the signals it was computed from.*
+
+![Bot](docs/shot-bot.png)
+
+*A bot visit. The same field, glitched.*
+
+## Run it
 
 ```bash
 npm install
-cp .env.local.example .env.local   # then paste your keys
-npm run dev                         # http://localhost:3000
+npm run dev    # http://localhost:3000
 ```
 
-In `.env.local`:
+Create `.env.local` (it is gitignored) with:
 
 | var | where | notes |
 |---|---|---|
 | `NEXT_PUBLIC_FINGERPRINT_PUBLIC_KEY` | Fingerprint dashboard → API keys (public) | safe in the browser |
-| `NEXT_PUBLIC_FINGERPRINT_REGION` | `eu` for a Belgium workspace | `us` / `eu` / `ap` |
-| `FINGERPRINT_SECRET_KEY` | dashboard → API keys (secret) | **server only**, gitignored |
+| `NEXT_PUBLIC_FINGERPRINT_REGION` | `eu` for this workspace | `us` / `eu` / `ap` |
+| `FINGERPRINT_SECRET_KEY` | dashboard → API keys (secret) | **server only** |
 
-It degrades gracefully: **no keys** → the visual runs in "demo mode"; **public
-key only** → live visitor ID + portrait; **public + secret** → full Smart Signals.
+**No keys** → the visual runs in demo mode. **Public key only** → a live visitor ID and portrait. **Public + secret** → confidence, location, and Smart Signals.
 
-Use the **simulate: human / bot** toggle (bottom-left) to trigger the bot state
-yourself — you're (presumably) not a bot.
+The source is at [github.com/flybylow/fingerprint](https://github.com/flybylow/fingerprint). To deploy, import that repo in Vercel and set the three variables above.
 
-## How it works
+## The experience
+
+1. **Homepage.** The eyebrow is "Fingerprint · device intelligence". The title is **Every device leaves a fingerprint.** Under it: "Every visitor is unique and identifiable, even anonymous ones. Reveal the fingerprint we compute from your browser." The field is a set of thin gray rings on a fixed center, bent slightly so they are not perfect circles, darker toward the middle so the type stays readable. They drift outward with the homepage pad. Two actions: **Show your fingerprint →** and **or visit as an AI agent**.
+
+2. **A person.** The title becomes **This is your device, computed in real time.** The line under it is "Your unique fingerprint, computed from the signals in the panel." Color arrives with the warp: the rings tighten, shift off center, and bend into a whorl seeded by the visitor ID. About 1,800 particles lift off the field and fade into the card. Closing the card does not send them back. The card shows the visitor ID, a confidence bar, location when the server has it, and Smart Signals.
+
+3. **A bot.** Choosing "visit as an AI agent", or a detection of automation, lands on **Nice try, robot.** with "No red carpet for you. Humans only past here." The portrait glitches and shifts red.
+
+4. **The switch.** After the card opens, the bottom-left control is already on **human** or **bot**, matching what was chosen or what identification found. Either side can still be overridden.
+
+5. **Sound.** On when the browser allows it. The button reads **stop sound** while the pad is playing and **play sound** while it is quiet. The homepage is a low beating pad. A human identification crossfades into a warmer A-major chord. A bot swaps the bed for a TV-test tone. Buttons get a dry tick.
+
+How a visitor ID becomes the whorl is written up in [docs/portrait.md](docs/portrait.md).
+
+## How identification works
 
 ```
 Browser ──getData()──► Fingerprint agent ──► { event_id, visitor_id }
@@ -46,61 +60,31 @@ Browser ──getData()──► Fingerprint agent ──► { event_id, visitor
                  └── trusted identification + Smart Signals (bot, incognito, vpn, …)
 ```
 
-- The `visitor_id` is used only to **seed the shader** (deterministic: same
-  device → same portrait). All trust-bearing data comes from the server call.
-- `event.bot === "bad"` (automation / AI agent) flips the UI into the glitch
-  state — Fingerprint's own AI Agent Detection, turned into a moment.
+The agent starts on the reveal click, not on page load. The `visitor_id` only seeds the shader, so the same device always draws the same portrait. Trust-bearing data comes from the server call. `event.bot === "bad"` (automation / AI agent) is what flips the portrait into the glitch state.
 
-## Stack (maps to the job description)
+## Stack
 
 | Requirement | Here |
 |---|---|
 | React + modern framework | Next.js 16 (App Router), TypeScript |
-| Canvas animations + shaders *(required)* | three.js + hand-written GLSL (`SignalPortrait.tsx`) |
-| Prototyping motion in the browser *(required)* | motion.dev (`motion/react`) |
-| three.js / WebGL / motion.dev *(preferred)* | all three |
+| Canvas animations + shaders | three.js + hand-written GLSL (`SignalPortrait.tsx`) |
+| Motion in the browser | motion.dev (`motion/react`) |
 | Their SDKs | `@fingerprint/agent` (client, on reveal) + `@fingerprint/node-sdk` (server) |
 | Perf / a11y | DPR cap, reduced-motion path, SSR-safe, lazy GL |
-
-## The experience
-
-1. **Gated entry** — land on the ambient fingerprint with a **"Show your
-   fingerprint →"** CTA, plus a quieter **"or visit as an AI agent"** that
-   emulates how an agent/bot sees the page.
-2. **The particle bridge** *(the centrepiece)* — on click, the field crystallizes
-   and ~1,800 three.js particles lift off nearly the whole fingerprint, then fade
-   into the data panel as it appears. The data comes *from* your fingerprint.
-   (See `SignalPortrait.tsx` — `PVERT`/`PFRAG`.)
-3. **Magnetic cursor** — the field bends toward the pointer.
-4. **Signal-reactive** — hovering a Smart Signal chip ripples the field; a bad-bot
-   verdict corrupts it (RGB split, datamosh tears, red particles).
-
-**Audio** is on when the page allows it. The button reads "stop sound" while the
-pad is playing and "play sound" while it is quiet. Bot swaps that bed for a TV-test tone — a beating 1 kHz square, a slow
-sweep, and a layer of noise — plus a short sting. Buttons get a dry tick.
-
-A **simulate: human / bot** toggle (shown after reveal) lets a human reviewer
-trigger the agent state.
 
 ## Project layout
 
 ```
 app/
-  layout.tsx              root shell (fonts). The agent starts on reveal, not here.
+  layout.tsx              root shell (fonts). The agent does not start here.
   page.tsx                renders <Experience/>
-  api/identify/route.ts   server: secret-key Server-API call (official node-sdk)
+  api/identify/route.ts   server: secret-key Server API call
   components/
-    Experience.tsx        orchestration: identify → enrich → render
-    SignalPortrait.tsx    three.js + GLSL shader (the showpiece)
-    SignalsPanel.tsx      visitor id, confidence, Smart Signal chips (motion.dev)
+    Experience.tsx        identify → enrich → render
+    SignalPortrait.tsx    three.js + GLSL field and particle flight
+    SignalsPanel.tsx      visitor id, confidence, Smart Signals
 lib/
   signals.ts              types, deterministic seed, server-event normalization
-  audio.ts                minimal WebAudio (on by default, gesture if the browser blocks it)
-preview/index.html        standalone static preview (no build, no keys)
-docs/                     PRD.md, BRAND.md, screenshots
+  audio.ts                WebAudio beds (home, welcome, bot)
+docs/                     portrait, PRD, brand, screenshots
 ```
-
-## Notes / next steps
-- Deploy to Vercel for a shareable link (needs the three env vars).
-- Confirm workspace region (default `eu`).
-- The raw-event JSON is available in a collapsible panel for engineers.
