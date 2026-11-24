@@ -13,7 +13,7 @@ export const siteConfig = {
   name: 'Ward De Muynck',
   title: 'Ward De Muynck — design engineer',
   description:
-    'Portfolio of Ward De Muynck, a designer who builds. Case studies from factories, healthcare, government, and Tabulas, plus the Signal Portrait demo.',
+    'Selected work by Ward De Muynck: industrial dashboards, machine-learning interfaces, and product systems, designed and built end to end.',
   siteUrl: origin,
   language: 'en',
   locale: 'en_US',
@@ -30,7 +30,7 @@ export const siteConfig = {
   /** The pill above the homepage headline. Set `enabled: false` to remove it. */
   availability: {
     enabled: true,
-    label: 'Founder of Tabulas',
+    label: 'Design Engineer',
   },
 
   /** The button at the end of the header and in the mobile menu. */

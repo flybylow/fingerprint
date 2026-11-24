@@ -2,6 +2,8 @@
 import Hero from '@/components/home/Hero.astro';
 import Services from '@/components/home/Services.astro';
 import Testimonials from '@/components/home/Testimonials.astro';
+import MinorWork from '@/components/home/MinorWork.astro';
+import AiWork from '@/components/home/AiWork.astro';
 import Icon from '@/components/ui/Icon.astro';
 import SectionHead from '@/components/ui/SectionHead.astro';
 import ProjectCard from '@/components/work/ProjectCard.astro';
@@ -11,7 +13,8 @@ import { url } from '@/lib/url';
 import { getProjects } from '@/lib/work';
 
 const projects = await getProjects();
-const selected = projects.toSorted((a, b) => Number(b.data.featured) - Number(a.data.featured)).slice(0, work.limit);
+const featuredProjects = projects.filter((p) => p.data.featured);
+const selected = (featuredProjects.length ? featuredProjects : projects).slice(0, work.limit);
 ---
 
 <BaseLayout>
@@ -32,6 +35,10 @@ const selected = projects.toSorted((a, b) => Number(b.data.featured) - Number(a.
       ))}
     </div>
   </section>
+
+  <AiWork />
+
+  <MinorWork />
 
   <Services />
   {testimonials.items.length > 0 && <Testimonials />}

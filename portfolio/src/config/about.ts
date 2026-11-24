@@ -2,7 +2,7 @@ export const about = {
   eyebrow: 'About',
   title: 'A designer who also',
   highlight: 'builds the thing.',
-  text: 'About twenty years across factories, healthcare, and government. I founded Tabulas, which works on digital identity for products.',
+  text: 'About twenty years across factories, healthcare, and government.',
   portraitAlt: 'Monogram for Ward De Muynck',
   sections: [
     {

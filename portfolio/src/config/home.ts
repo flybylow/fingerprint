@@ -2,13 +2,13 @@ export const hero = {
   greeting: "Hi, I'm Ward.",
   title: 'I design the hard parts, then',
   highlight: 'I build them.',
-  text: 'About twenty years across factories, healthcare, and government. I founded Tabulas, which works on digital identity for products.',
+  text: 'I turn dense, data-heavy systems into screens people can actually use.',
   primary: { label: 'See selected work', href: '/#work' },
   secondary: { label: 'Signal Portrait', href: '~/' },
   facts: [
-    { value: '20+', label: 'years designing and building' },
-    { value: '3', label: 'fields: factories, care, government' },
-    { value: '1', label: 'company founded, Tabulas' },
+    { value: '20+', label: 'years in product design' },
+    { value: '5', label: 'industries, from steel to healthcare' },
+    { value: 'Now', label: 'founder, building my own product' },
   ],
 };
 
@@ -18,6 +18,17 @@ export const work = {
   text: 'Industrial dashboards, the workflow around a vision model, and a passport that stays with the product.',
   /** How many featured case studies the homepage shows. */
   limit: 5,
+};
+
+export const ai = {
+  eyebrow: 'AI & machine learning',
+  title: 'Interfaces for systems that learn',
+  text: 'A lot of my work sits in front of a model. I design the screens where people train it, correct it, and decide when to trust it, and lately I build those products end to end myself.',
+  items: [
+    { title: 'Robovision', text: 'The workflow around a computer-vision model: labeling, review, and the moment a person overrules the machine.' },
+    { title: 'WardBot', text: 'An AI agent that answers questions about my work, wired up and shipped end to end.' },
+    { title: 'Signal Portrait', text: 'This demo: device intelligence turned into something you can watch react in real time.' },
+  ],
 };
 
 export const services = {
@@ -42,7 +53,7 @@ export const services = {
     {
       icon: 'pen-tool',
       title: 'Build',
-      text: 'The interface does not stop at a file. I design it and I build it.',
+      text: 'The interface does not stop in the design file. I take it to production in React, down to performance and the edge cases.',
     },
   ],
 };
