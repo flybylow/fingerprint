@@ -30,7 +30,7 @@ const { client, title, cover, tint } = project.data;
         </span>
       </div>
     </div>
-    <div class="tint-panel relative min-h-64 overflow-hidden" style={`--tint: ${tint}`}>
+    <div class="next-frame tint-panel relative min-h-64 overflow-hidden" style={`--tint: ${tint}`}>
       <Image
         src={cover}
         alt=""
@@ -45,14 +45,66 @@ const { client, title, cover, tint } = project.data;
 
 <style>
   .next-card:has(a:focus-visible) {
-    outline: 2px solid var(--ink);
+    outline: 2px solid var(--accent);
     outline-offset: 6px;
   }
 
   @media (prefers-reduced-motion: no-preference) {
     .next-shot {
       transform-origin: 0 0;
-      transition: scale 700ms var(--ease-out-expo);
+      transition:
+        scale 700ms var(--ease-out-expo),
+        filter 450ms ease;
+    }
+  }
+
+  .next-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    opacity: 0.18;
+    mix-blend-mode: soft-light;
+    pointer-events: none;
+    animation: breath 8s ease-in-out infinite;
+  }
+
+  .next-shot {
+    filter: grayscale(1);
+  }
+
+  @media (hover: hover) {
+    .next-card:hover .next-shot,
+    .next-card:has(a:focus-visible) .next-shot {
+      filter: none;
+    }
+
+    .next-card:hover .next-frame::after,
+    .next-card:has(a:focus-visible) .next-frame::after {
+      animation: none;
+      opacity: 0;
+    }
+  }
+
+  @keyframes breath {
+    0%,
+    100% {
+      opacity: 0.18;
+    }
+    50% {
+      opacity: 0.42;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .next-frame::after {
+      animation: none;
+      opacity: 0.28;
+    }
+
+    .next-card:hover .next-frame::after,
+    .next-card:has(a:focus-visible) .next-frame::after {
+      opacity: 0;
     }
   }
 

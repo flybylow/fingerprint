@@ -3,7 +3,7 @@ import { url } from '@/lib/url';
 
 export type Project = CollectionEntry<'work'>;
 
-export const workPageSize = 6;
+export const workPageSize = 24;
 
 export const projectHref = (project: Project) => url(`/work/${project.id}/`);
 

@@ -18,12 +18,12 @@ const initials = (name: string) =>
       <li class="reveal">
         <figure class="flex h-full flex-col rounded-card border border-line bg-surface p-7 sm:p-8">
           <Icon name="quote" class="size-6 text-muted" />
-          <blockquote class="mt-6 flex-1 text-[1.15rem] leading-relaxed text-ink">
+          <blockquote class="mt-6 flex-1 text-lead text-ink">
             <p>{item.quote}</p>
           </blockquote>
           <figcaption class="mt-8 flex items-center gap-3 border-t border-line pt-6">
             <span
-              class="grid size-10 place-items-center rounded-full bg-sunken text-sm font-semibold text-body"
+              class="grid size-10 place-items-center rounded-full bg-sunken font-mono text-xs tracking-[0.14em] text-muted uppercase"
               aria-hidden="true"
             >
               {initials(item.name)}

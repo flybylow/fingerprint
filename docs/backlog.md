@@ -12,4 +12,5 @@ Living list. Dated detail lives in the session notes linked from [INDEX.md](INDE
 
 ## Not started
 
+- AI section on the portfolio homepage (`AI & machine learning`). Ward will supply the real copy later. Keep the section where it is, under Smaller work, and replace the placeholder items when that copy arrives.
 - `THREE.Clock` deprecation warning in the console. Noise, not the overlay.

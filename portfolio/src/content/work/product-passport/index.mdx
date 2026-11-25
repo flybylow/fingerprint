@@ -1,0 +1,163 @@
+---
+title: Material passports for buildings
+client: Product Passport
+summary: EU regulation will require a digital product passport for every construction product. I built the prototypes that make that idea tangible.
+role: Concept, design, and code
+duration: 2025 to 2026
+services: [Craft, Live]
+cover: ./cover.png
+coverAlt: Building 3D view in the passport explorer, a house model with its floors and the elements in the file
+tint: '#13171c'
+order: 2
+featured: true
+---
+
+import tracerScan from './tracer-scan.png';
+import tracerTrace from './tracer-trace.png';
+import tracerChain from './tracer-chain.png';
+import reward from './reward.png';
+import bimImport from './bim-import.png';
+import building from './building.png';
+import wall from './wall.png';
+import epd from './epd.png';
+import timeline from './timeline.png';
+import graph from './graph.png';
+import doors from './doors.png';
+
+## Overview
+
+EU regulation will require a digital product passport for every construction product. A building is a combination of thousands of products, so a building is a collection of material passports. I built the prototypes that make that idea tangible: upload an architect's file, walk through your building, see its ecological footprint.
+
+The live prototype link is not published yet.
+
+## Context
+
+**It started at a hackathon.** With Stefanos and Omar, three people in three countries working async, we built Textile Tracer at a blockchain hackathon. I made the design, then we coded the smart contracts together. Every actor signs their step during the lifecycle of a t-shirt, and the data gets pinned on the IOTA blockchain so it becomes tamper proof and outlives the companies that wrote it. A consumer scans a QR and sees the full product trace. Our team won the top award out of 60+ teams.
+
+<FigureRow
+  items={[
+    {
+      src: tracerScan,
+      alt: 'Textile Tracer consumer scan view with product trace on a phone',
+      caption: 'Textile Tracer. QR scan.',
+    },
+    {
+      src: tracerTrace,
+      alt: 'Textile Tracer product trace detail on mobile',
+      caption: 'Textile Tracer. Trace view.',
+    },
+    {
+      src: tracerChain,
+      alt: 'Textile Tracer supply chain steps pinned on IOTA',
+      caption: 'Textile Tracer. Supply chain.',
+    },
+  ]}
+/>
+
+<Figure
+  src={reward}
+  alt="Three steps of the t-shirt passport: the manufacturer locks a reward, the consumer adds an address, and the recycler confirms the material"
+  caption="The t-shirt passport. A reward locked by the manufacturer, claimed by the consumer, released when the recycler confirms the material."
+  plain
+/>
+
+**What the project taught me after the win:**
+
+- People do not care about the technology. They care about verified information when it is presented in a simple way. Blockchain tech is very powerful but currently only used by early adopters.
+- A t-shirt's recycling cycle is long and its residual value is small. The economics only work at massive scale.
+- The multi-stakeholder model worked. Every actor signing their own step meant the passport could be updated across a product's whole lifecycle, not just at the point of sale. That idea outlasted the t-shirt.
+
+<figure class="not-prose">
+  <div class="overflow-hidden rounded-card tint-panel p-[4%] sm:p-[6%]">
+    <iframe
+      class="aspect-video w-full"
+      src="https://www.youtube-nocookie.com/embed/zgrckrKRArU?rel=0&modestbranding=1&start=1"
+      title="Textile Tracer hackathon demo"
+      loading="lazy"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+    ></iframe>
+  </div>
+  <figcaption class="mx-auto mt-4 max-w-[44rem] text-[0.95rem] text-muted">Textile Tracer. Hackathon demo.</figcaption>
+</figure>
+
+**The pivot.** I applied it to an industry where materials hold real value and traceability is becoming law: construction. No one had designed a platform where that same lifecycle model, multiple independent stakeholders updating one artifact, could work at building scale. A producer, consumers, a repair service, a recycler at intake, a regulator with a checklist. One passport, multiple views: the same data, different entry points.
+
+## Solution
+
+The hard problem is matching material names across the lifecycle. The architect's model says Concrete, type C30. The lifecycle databases say Cement CEM II. One Swiss database alone has 200 variants. Different languages, different nomenclatures, same physical material. So I built a translation layer that matches the different namings to one identity. Everything downstream depends on this working first.
+
+Concrete, type C30. Cement CEM II. 200 Swiss variants. One identity.
+
+An architect uploads a BIM file, the industry's standard 3D model format.
+
+<Figure
+  src={bimImport}
+  alt="BIM file import flow parsing architect models into building elements"
+  caption="BIM upload. Parse."
+/>
+
+The system parses it and matches every material to a passport with lifecycle data from producer databases. A CO2 calculator adds it up. You walk through the actual building in the browser, drill down from house to product to passport, and see the total ecological footprint.
+
+<FigureRow
+  items={[
+    {
+      src: building,
+      alt: 'Three dimensional building model in the browser viewer',
+      caption: 'House. Building view.',
+    },
+    {
+      src: wall,
+      alt: 'Wall assembly drill down from building to material layer',
+      caption: 'Wall. Material detail.',
+    },
+  ]}
+/>
+
+Products stay traceable across location and time. Buildings, it turns out, do not fit in a PDF.
+
+Two more prototypes complete the picture. Producer Environmental Product Declarations (EPDs) are technical material files locked in PDFs, so I turned them into structured data that machines can read and people can question in plain language. Because buildings change (repairs, reselling, demolition) I built an event timeline where each actor logs those moments, so the passport collection stays true across a building's life.
+
+<FigureRow
+  items={[
+    {
+      src: epd,
+      alt: 'EPD agent compare view showing a PDF table alongside extracted environmental data',
+      caption: 'EPD agent. Live UI.',
+    },
+    {
+      src: timeline,
+      alt: 'Building event timeline with repair, resale, and demolition milestones logged by different actors',
+      caption: 'Building timeline. Prototype.',
+    },
+  ]}
+/>
+
+## Impact
+
+The chain works end to end: from an architect's file to a verifiable footprint, on open standards, in the browser. Textile Tracer's award added outside validation of the multi-stakeholder mechanism. The honest negative result in my research mattered most. It moved the work to the domain where it counts.
+
+## Role
+
+Concept, design, and code, solo, across the viewer, the EPD work, and the timeline. Textile Tracer was the three of us together. To work with 3D building models in the browser I took the That Open Company course.
+
+## Reflection
+
+The bigger reflection is about timing. Everything here depends on laws that are still years from enforcement, and laws can change. I proved the chain works but cannot make the market arrive faster. I would rather spend the next years inside a company that already has traction than wait for regulations.
+
+## More from the project
+
+<FigureRow
+  items={[
+    {
+      src: graph,
+      alt: 'Material passport graph connecting products across the building',
+      caption: 'Material graph. Live UI.',
+    },
+    {
+      src: doors,
+      alt: 'Multi-stakeholder entry points into the same product passport',
+      caption: 'Multi-stakeholder doors. Live UI.',
+    },
+  ]}
+/>

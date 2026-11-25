@@ -1,6 +1,15 @@
 @import 'tailwindcss';
 @import '@fontsource/geist-mono/400.css';
 
+/* Same Geist file the Signal Portrait loads from the `geist` package. */
+@font-face {
+  font-family: 'Geist';
+  src: url('/portfolio/fonts/geist/Geist-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @font-face {
@@ -59,7 +68,7 @@
 }
 
 @theme {
-  --font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-serif: 'Instrument Serif', ui-serif, Georgia, 'Times New Roman', serif;
   --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
@@ -102,24 +111,27 @@
 }
 
 :root {
-  --canvas: #fafaf7;
-  --surface: #ffffff;
-  --sunken: #f2f2ed;
-  --line: #e6e5df;
-  --line-strong: #d3d2ca;
-  --ink: #121211;
-  --body: #3b3b38;
-  --muted: #6a6964;
+  /* Paper inverse of the demo: warm white ground, near-black ink, same orange. */
+  --canvas: #f5f3f0;
+  --surface: #fffcf9;
+  --sunken: #ebe7e2;
+  --line: rgba(10, 10, 11, 0.08);
+  --line-strong: rgba(255, 93, 34, 0.35);
+  --ink: #0a0a0b;
+  --body: #2a2926;
+  --muted: #6e6a64;
   --accent: #ff5d22;
   --accent-strong: #ff7a3d;
-  --on-accent: #121211;
-  --inverse: #121211;
-  --on-inverse: #fafaf7;
-  --night: #121211;
-  --night-ink: #f4f3ee;
-  --night-muted: #a9a8a1;
-  --shadow-card: 0 1px 2px rgb(18 18 17 / 0.05), 0 12px 32px -12px rgb(18 18 17 / 0.16);
-  --shadow-shot: 0 2px 6px rgb(18 18 17 / 0.06), 0 30px 60px -24px rgb(18 18 17 / 0.3);
+  --ok: #39d98a;
+  --warn: #ff3b3b;
+  --on-accent: #0a0a0b;
+  --inverse: #0a0a0b;
+  --on-inverse: #f5f3f0;
+  --night: #0a0a0b;
+  --night-ink: #f5f3f0;
+  --night-muted: #9a968f;
+  --shadow-card: 0 1px 2px rgb(10 10 11 / 0.05), 0 12px 32px -12px rgb(10 10 11 / 0.14);
+  --shadow-shot: 0 2px 6px rgb(10 10 11 / 0.06), 0 30px 60px -24px rgb(10 10 11 / 0.22);
   --header-h: 4.5rem;
   --gutter: clamp(1rem, 0.4rem + 2.6vw, 2.5rem);
   --measure: 80rem;
@@ -127,20 +139,49 @@
 }
 
 :root.dark {
-  --canvas: #0d0a09;
-  --surface: #1a1210;
-  --sunken: #140e0c;
-  --line: rgba(245, 240, 235, 0.08);
-  --line-strong: rgba(255, 93, 34, 0.28);
-  --ink: #f5f1ec;
-  --body: #f5f1ec;
-  --muted: #9a948c;
-  --inverse: #f4f3ee;
-  --on-inverse: #121211;
-  --night: #171716;
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 12px 32px -12px rgb(0 0 0 / 0.6);
-  --shadow-shot: 0 2px 6px rgb(0 0 0 / 0.3), 0 30px 60px -24px rgb(0 0 0 / 0.7);
+  /* Matched to the Signal Portrait demo palette */
+  --canvas: #0a0a0b;
+  --surface: #141416;
+  --sunken: #060608;
+  --line: rgba(245, 243, 240, 0.09);
+  --line-strong: rgba(255, 93, 34, 0.30);
+  --ink: #f5f3f0;
+  --body: #f5f3f0;
+  --muted: #9a968f;
+  --accent: #ff5d22;
+  --accent-strong: #ff7a3d;
+  --ok: #39d98a;
+  --warn: #ff3b3b;
+  --on-accent: #0a0a0b;
+  --inverse: #f5f3f0;
+  --on-inverse: #0a0a0b;
+  --night: #141416;
+  --night-ink: #f5f3f0;
+  --night-muted: #9a968f;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.45), 0 12px 32px -12px rgb(0 0 0 / 0.65);
+  --shadow-shot: 0 2px 6px rgb(0 0 0 / 0.35), 0 30px 60px -24px rgb(0 0 0 / 0.72);
   color-scheme: dark;
+}
+
+/* Demo-style scrollbar in dark mode */
+.dark {
+  scrollbar-color: color-mix(in oklab, var(--ink) 18%, var(--canvas)) var(--canvas);
+  scrollbar-width: thin;
+}
+.dark ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.dark ::-webkit-scrollbar-track {
+  background: var(--canvas);
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--ink) 18%, var(--canvas));
+  border: 2px solid var(--canvas);
+  border-radius: 999px;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--ink) 28%, var(--canvas));
 }
 
 @layer base {
@@ -184,7 +225,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--ink);
+    outline: 2px solid var(--accent);
     outline-offset: 3px;
     border-radius: 0.25rem;
   }
@@ -241,10 +282,43 @@
   }
 
   .serif {
+    color: var(--muted);
     font-family: var(--font-serif);
     font-style: italic;
     font-weight: 400;
     letter-spacing: -0.01em;
+  }
+
+  /* Second part of a headline. Same italic as .serif, in brand orange. */
+  .serif-accent {
+    color: var(--accent);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  .signal-title {
+    max-width: 34rem;
+    font-size: clamp(2.2rem, 4vw, 3.35rem);
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+  }
+
+  .signal-sub {
+    color: var(--muted);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    line-height: 1.6;
+  }
+
+  .meta {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
 
   .btn {
@@ -344,6 +418,51 @@
     line-height: 1.2;
   }
 
+  /* The Signal Portrait panel: slight alpha, orange hairline, a slow drift. */
+  .signal-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    border: 1px solid color-mix(in srgb, var(--accent) 32%, var(--line));
+    background:
+      radial-gradient(120% 80% at 50% 0%, rgb(255 93 34 / 0.1), transparent 62%),
+      color-mix(in srgb, var(--surface) 78%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .signal-card::before {
+    content: '';
+    position: absolute;
+    inset: -45%;
+    background: radial-gradient(42% 38% at 30% 40%, rgb(255 93 34 / 0.18), transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Same glass as the closing card, in gray. Orange stays on the one invitation. */
+  .quiet-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    border: 1px solid color-mix(in srgb, var(--ink) 12%, var(--line));
+    background:
+      radial-gradient(120% 80% at 50% 0%, color-mix(in srgb, var(--ink) 5%, transparent), transparent 62%),
+      color-mix(in srgb, var(--surface) 78%, transparent);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--ink) 8%, transparent),
+      0 18px 40px -30px rgb(0 0 0 / 0.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .quiet-card::before {
+    content: '';
+    position: absolute;
+    inset: -45%;
+    background: radial-gradient(42% 38% at 28% 36%, color-mix(in srgb, var(--ink) 7%, transparent), transparent 70%);
+    pointer-events: none;
+  }
+
   .tint-panel {
     background: var(--tint, var(--sunken));
   }
@@ -353,9 +472,9 @@
   }
 
   .shot {
-    border-radius: 0.875rem;
+    border-radius: var(--radius-card);
     box-shadow: var(--shadow-shot);
-    outline: 1px solid rgb(18 18 17 / 0.08);
+    outline: 1px solid var(--line);
     outline-offset: -1px;
   }
 }
@@ -379,17 +498,17 @@
   .prose h2 {
     margin-top: 2.6em;
     color: var(--ink);
-    font-size: clamp(1.6rem, 1.3rem + 1vw, 2.1rem);
-    line-height: 1.15;
-    letter-spacing: -0.03em;
+    font-size: var(--text-section);
+    line-height: var(--text-section--line-height);
+    letter-spacing: var(--text-section--letter-spacing);
   }
 
   .prose h3 {
     margin-top: 2em;
     color: var(--ink);
-    font-size: 1.3rem;
-    line-height: 1.3;
-    letter-spacing: -0.02em;
+    font-size: var(--text-title);
+    line-height: var(--text-title--line-height);
+    letter-spacing: var(--text-title--letter-spacing);
   }
 
   .prose h2 + *,
@@ -405,12 +524,14 @@
   .prose a {
     color: var(--ink);
     text-decoration: underline;
-    text-decoration-color: color-mix(in oklab, var(--ink) 35%, transparent);
+    text-decoration-color: color-mix(in oklab, var(--accent) 45%, transparent);
+    text-decoration-thickness: 1px;
     text-underline-offset: 0.2em;
   }
 
   .prose a:hover {
-    text-decoration-color: var(--ink);
+    color: var(--accent);
+    text-decoration-color: var(--accent);
   }
 
   .prose ul,
@@ -438,11 +559,12 @@
     max-width: 52rem;
     margin-block: 2.5em;
     color: var(--ink);
-    font-family: var(--font-serif);
-    font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.35rem);
-    font-style: italic;
-    line-height: 1.2;
-    letter-spacing: -0.01em;
+    font-family: var(--font-sans);
+    font-size: var(--text-title);
+    font-style: normal;
+    font-weight: 500;
+    line-height: var(--text-title--line-height);
+    letter-spacing: var(--text-title--letter-spacing);
   }
 
   .prose blockquote p::before {
@@ -481,8 +603,12 @@
   }
 
   .prose th {
-    color: var(--ink);
-    font-weight: 600;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
 
   .prose hr {
@@ -505,6 +631,15 @@
   }
 }
 
+@keyframes signal-drift {
+  from {
+    transform: translate3d(-4%, -3%, 0);
+  }
+  to {
+    transform: translate3d(7%, 5%, 0);
+  }
+}
+
 @keyframes rise {
   from {
     opacity: 0;
@@ -520,6 +655,11 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  .signal-card::before,
+  .quiet-card::before {
+    animation: signal-drift 16s ease-in-out infinite alternate;
+  }
+
   .rise {
     animation: rise 900ms var(--ease-out-expo) both;
     animation-delay: calc(var(--rise-step, 0) * 80ms);

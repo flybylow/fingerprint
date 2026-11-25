@@ -1,0 +1,215 @@
+---
+import SectionHead from '@/components/ui/SectionHead.astro';
+import { approach } from '@/config/approach';
+import { url } from '@/lib/url';
+---
+
+<section class="shell mt-20 sm:mt-28" aria-labelledby="approach-title">
+  <SectionHead id="approach-title" eyebrow={approach.eyebrow} title={approach.title} text={approach.intro} />
+  <div class="approach-list mt-10">
+    {approach.items.map((item) => (
+      <details class="approach-row reveal">
+        <summary class="approach-summary">
+          <span class="approach-num">{item.n}</span>
+          <span class="approach-heading">
+            <span class="approach-title">{item.title}</span>
+            <span class="approach-lead italic">{item.lead}</span>
+          </span>
+          <span class="approach-toggle">
+            <span class="when-closed">Read more</span>
+            <span class="when-open">Read less</span>
+            <span class="approach-chevron" aria-hidden="true"></span>
+          </span>
+        </summary>
+        <div class="approach-panel">
+          <div class="approach-copy">
+            <p>{item.body}</p>
+            {item.links.length > 0 && (
+              <ul class="approach-links">
+                {item.links.map((link) => (
+                  <li>
+                    <a class="link" href={link.external ? link.href : url(link.href)}>
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      </details>
+    ))}
+  </div>
+</section>
+
+<style>
+  .approach-list {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .approach-row {
+    position: relative;
+    interpolate-size: allow-keywords;
+  }
+
+  .approach-row::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent) 62%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .approach-summary {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem 1.25rem;
+    padding: 1.25rem 0 1.15rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .approach-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .approach-summary::marker {
+    content: '';
+  }
+
+  .approach-num {
+    flex-shrink: 0;
+    padding-top: 0.35rem;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+  }
+
+  .approach-heading {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .approach-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.25;
+  }
+
+  .approach-lead {
+    color: var(--muted);
+    font-family: var(--font-sans);
+    font-size: 0.975rem;
+    font-weight: 400;
+    line-height: 1.45;
+  }
+
+  .approach-toggle {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.45rem;
+    margin-left: auto;
+    padding-top: 0.3rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .when-open {
+    display: none;
+  }
+
+  .approach-row[open] .when-closed {
+    display: none;
+  }
+
+  .approach-row[open] .when-open {
+    display: inline;
+  }
+
+  .approach-chevron {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-0.1rem) rotate(45deg);
+    transition: transform 240ms var(--ease-out-expo);
+  }
+
+  .approach-row[open] .approach-chevron {
+    transform: translateY(0.1rem) rotate(225deg);
+  }
+
+  .approach-row::details-content {
+    height: 0;
+    overflow: clip;
+    opacity: 0;
+    transition:
+      height 280ms var(--ease-out-expo),
+      opacity 220ms ease,
+      content-visibility 280ms allow-discrete;
+  }
+
+  .approach-row[open]::details-content {
+    height: auto;
+    opacity: 1;
+  }
+
+  .approach-panel {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem 2.5rem;
+    padding: 0 0 1.4rem 2.15rem;
+    color: var(--muted);
+    font-size: 0.975rem;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  .approach-copy {
+    min-width: 0;
+    max-width: 44rem;
+  }
+
+  .approach-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.15rem;
+    margin-top: 0.9rem;
+  }
+
+  @media (max-width: 639px) {
+    .approach-summary {
+      flex-wrap: wrap;
+    }
+
+    .approach-panel {
+      flex-direction: column;
+      padding-left: 0;
+    }
+
+    .approach-toggle {
+      padding-top: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .approach-chevron,
+    .approach-row::details-content {
+      transition: none;
+    }
+  }
+</style>

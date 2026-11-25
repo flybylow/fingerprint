@@ -22,11 +22,11 @@ const categories = [
   data-cookie-banner
   hidden
 >
-  <h2 id="cookie-banner-title" class="flex items-center gap-2 font-semibold">
+  <h2 id="cookie-banner-title" class="flex items-center gap-2">
     <Icon name="cookie" class="size-4.5" />
     Cookies, briefly
   </h2>
-  <p class="mt-2 text-[0.95rem] text-body">
+  <p class="mt-2 text-sm text-body">
     This site remembers your theme and this choice. Analytics and marketing stay off unless you allow them.{' '}
     <a class="link" href={url('/cookies/')}>
       Cookie policy
@@ -39,7 +39,7 @@ const categories = [
     <button type="button" class="btn btn-ghost btn-sm" data-consent="reject">
       Reject
     </button>
-    <button type="button" class="btn btn-sm px-2 underline-offset-4 hover:underline" data-cookie-preferences>
+    <button type="button" class="link text-sm" data-cookie-preferences>
       Preferences
     </button>
   </div>
@@ -56,7 +56,7 @@ const categories = [
         <h2 id="cookie-dialog-title" class="text-title">
           Cookie preferences
         </h2>
-        <p class="mt-1.5 text-[0.95rem] text-muted">Choices are saved in this browser only.</p>
+        <p class="mt-1.5 text-sm text-muted">Choices are saved in this browser only.</p>
       </div>
       <button
         type="submit"
@@ -71,15 +71,15 @@ const categories = [
     <ul class="mt-6 grid gap-3">
       <li class="rounded-panel border border-line p-4">
         <div class="flex items-center justify-between gap-4">
-          <h3 class="font-semibold">Essential</h3>
+          <h3>Essential</h3>
           <span class="chip">Always on</span>
         </div>
-        <p class="mt-1.5 text-[0.95rem] text-muted">Remembers your color theme and these preferences.</p>
+        <p class="mt-1.5 text-sm text-muted">Remembers your color theme and these preferences.</p>
       </li>
       {categories.map((category) => (
         <li class="rounded-panel border border-line p-4">
           <div class="flex items-center justify-between gap-4">
-            <label class="font-semibold" for={`consent-${category.name}`}>
+            <label class="font-medium" for={`consent-${category.name}`}>
               {category.title}
             </label>
             <input
@@ -91,7 +91,7 @@ const categories = [
               aria-describedby={`consent-${category.name}-text`}
             />
           </div>
-          <p id={`consent-${category.name}-text`} class="mt-1.5 text-[0.95rem] text-muted">
+          <p id={`consent-${category.name}-text`} class="mt-1.5 text-sm text-muted">
             {category.text}
           </p>
         </li>
@@ -212,7 +212,7 @@ const categories = [
     width: 1.2rem;
     height: 1.2rem;
     border-radius: 999px;
-    background: #fff;
+    background: var(--ink);
     box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
     transition: translate 200ms var(--ease-out-expo);
   }

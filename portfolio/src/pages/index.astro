@@ -1,9 +1,8 @@
 ---
+import Approach from '@/components/home/Approach.astro';
 import Hero from '@/components/home/Hero.astro';
-import Services from '@/components/home/Services.astro';
+import Practice from '@/components/home/Practice.astro';
 import Testimonials from '@/components/home/Testimonials.astro';
-import MinorWork from '@/components/home/MinorWork.astro';
-import AiWork from '@/components/home/AiWork.astro';
 import Icon from '@/components/ui/Icon.astro';
 import SectionHead from '@/components/ui/SectionHead.astro';
 import ProjectCard from '@/components/work/ProjectCard.astro';
@@ -21,25 +20,23 @@ const selected = (featuredProjects.length ? featuredProjects : projects).slice(0
   <Hero />
 
   <section id="work" class="shell" aria-labelledby="work-title">
-    <SectionHead id="work-title" eyebrow={work.eyebrow} title={work.title} text={work.text}>
-      {projects.length > selected.length && (
-        <a class="btn btn-ghost" href={url('/work/')}>
-          All work
-          <Icon name="arrow-right" class="icon-nudge size-4" />
-        </a>
-      )}
+    <SectionHead id="work-title" eyebrow={work.eyebrow} title={work.title}>
+      <p slot="description" class="mt-4 max-w-xl text-[0.975rem] leading-relaxed font-normal tracking-[0.01em] text-muted">
+        Two deep dives on recent projects, the rest is on the <a class="underline decoration-accent/40 underline-offset-4 transition-colors hover:text-accent hover:decoration-accent" href={url('/work/')}>work page</a>.
+      </p>
+      <a class="btn btn-ghost" href={url('/work/')}>
+        All work
+        <Icon name="arrow-right" class="icon-nudge size-4" />
+      </a>
     </SectionHead>
     <div class="mt-12 grid gap-x-8 gap-y-16 md:grid-cols-2">
       {selected.map((project, index) => (
-        <ProjectCard project={project} eager={index < 2} />
+        <ProjectCard project={project} eager={index < 2} showServices={false} />
       ))}
     </div>
   </section>
 
-  <AiWork />
-
-  <MinorWork />
-
-  <Services />
+  <Approach />
   {testimonials.items.length > 0 && <Testimonials />}
+  <Practice />
 </BaseLayout>

@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import ContactLink from '@/components/ui/ContactLink.astro';
 import Icon from '@/components/ui/Icon.astro';
 import PageHero from '@/components/ui/PageHero.astro';
 import { resume } from '@/config/resume';
@@ -23,13 +23,14 @@ import { url } from '@/lib/url';
           Download PDF
         </a>
       )}
-      <a
-        class:list={['btn', siteConfig.resumePdf ? 'btn-ghost' : 'btn-primary']}
-        href={`mailto:${siteConfig.author.email}`}
+      <ContactLink
+        kind="mail"
+        value={siteConfig.author.email}
+        reveal
+        class:list={['btn', siteConfig.resumePdf ? 'btn-ghost' : 'btn-accent']}
       >
-        {siteConfig.author.email}
-        <Icon name="arrow-up-right" class="icon-nudge-diagonal size-4" />
-      </a>
+        <Icon slot="icon" name="arrow-up-right" class="icon-nudge-diagonal size-4" />
+      </ContactLink>
     </div>
   </PageHero>
 
@@ -41,8 +42,14 @@ import { url } from '@/lib/url';
       <dl class="grid gap-x-10 gap-y-6 sm:grid-cols-2">
         {resume.snapshot.map((item) => (
           <div>
-            <dt class="text-sm text-muted">{item.label}</dt>
-            <dd class="mt-1 text-lg font-medium">{item.value}</dd>
+            <dt class="meta">{item.label}</dt>
+            <dd class="mt-1 text-lg font-medium">
+              {item.contact ? (
+                <ContactLink kind={item.contact} value={item.value} reveal />
+              ) : (
+                item.value
+              )}
+            </dd>
           </div>
         ))}
       </dl>
@@ -56,11 +63,17 @@ import { url } from '@/lib/url';
         {resume.experience.map((job) => (
           <li class="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-x-8">
             <h3 class="text-title">
-              {job.role}
-              <span class="text-muted">, {job.company}</span>
+              <span class="text-accent">{job.role}</span><span class="text-muted">, {job.company}</span>
             </h3>
             <p class="text-sm text-muted sm:row-start-1 sm:col-start-2 sm:pt-1.5">{job.period}</p>
             <p class="max-w-2xl text-body">{job.text}</p>
+            {job.points && (
+              <ul class="max-w-2xl list-disc space-y-1 pl-5 text-body sm:col-span-2">
+                {job.points.map((point) => (
+                  <li>{point}</li>
+                ))}
+              </ul>
+            )}
           </li>
         ))}
       </ol>
@@ -73,7 +86,7 @@ import { url } from '@/lib/url';
       <ul class="grid gap-8 sm:grid-cols-3">
         {resume.capabilities.map((item) => (
           <li>
-            <h3 class="font-semibold">{item.title}</h3>
+            <h3 class="text-title">{item.title}</h3>
             <p class="mt-2 text-muted">{item.text}</p>
           </li>
         ))}
@@ -89,10 +102,10 @@ import { url } from '@/lib/url';
         {resume.education.map((item) => (
           <li class="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-1">
             <span>
-              <span class="font-semibold">{item.title}</span>
-              <span class="text-muted">, {item.place}</span>
+              <span class="font-medium">{item.title}</span>
+              {item.place && <span class="text-muted">, {item.place}</span>}
             </span>
-            <span class="text-sm text-muted">{item.period}</span>
+            {item.period && <span class="text-sm text-muted">{item.period}</span>}
           </li>
         ))}
       </ul>
@@ -104,18 +117,24 @@ import { url } from '@/lib/url';
       <h2 id="tools-title" class="eyebrow self-start">
         Tools
       </h2>
-      <ul class="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <ul class="flex flex-wrap gap-2">
         {resume.tools.map((tool) => (
-          <li class="flex items-center gap-3 rounded-panel border border-line bg-surface p-3.5">
-            <span
-              class:list={[
-                'grid size-11 place-items-center rounded-xl border',
-                tool.dark ? 'border-[#121211] bg-[#121211]' : 'border-line bg-sunken',
-              ]}
-            >
-              <Image src={tool.logo} alt="" class="size-6 object-contain" />
-            </span>
-            <span class="font-medium">{tool.name}</span>
+          <li class="rounded-full border border-line px-3 py-1.5 text-sm">{tool}</li>
+        ))}
+      </ul>
+    </section>
+    )}
+
+    {resume.languages.length > 0 && (
+    <section class="resume-row reveal" aria-labelledby="languages-title">
+      <h2 id="languages-title" class="eyebrow self-start">
+        Languages
+      </h2>
+      <ul class="grid gap-y-4 sm:grid-cols-2 sm:gap-x-16 lg:gap-x-24">
+        {resume.languages.map((language) => (
+          <li class="flex items-baseline justify-between gap-6 border-b border-line pb-3">
+            <span class="font-medium">{language.name}</span>
+            <span class="text-sm text-muted">{language.level}</span>
           </li>
         ))}
       </ul>

@@ -1,16 +1,122 @@
 ---
-title: Factory performance, readable on the floor
+title: Machine downtimes made visible
 client: Electrolux
-summary: Dashboards for overall equipment effectiveness, so a factory can see what is running, what stopped, and why.
-role: Design and build
-services: [Dashboards, Interface design, Data visualization]
+summary: Action lines lived on paper. One view now runs across lines, sites, and continents.
+role: Staff Product Designer
+duration: 2024 to 2025
+services: [Systems, Piloted · 3 sites]
 cover: ./cover.png
-coverAlt: Abstract orange rings on a warm black field, the cover for the Electrolux case study.
-tint: '#2a1610'
+coverAlt: Operator portal for the foaming cabinets plant, with OEE, downtime rows, and a shift timeline.
+tint: '#10243f'
 order: 1
 featured: true
 ---
 
-The work is the view a factory uses to read overall equipment effectiveness. A line that is down, a station that is slow, and a reason that is still unknown should not look the same.
+import downtimes from './downtimes.png';
+import justification from './justification.png';
+import dashboard from './dashboard.png';
+import monthly from './monthly.png';
+import exploration from './exploration.png';
+import colour from './colour.png';
+import workshop from './workshop.jpg';
 
-The interface puts the live state first and keeps the explanation one step away, so a supervisor can see the floor without opening a report.
+## Overview
+
+Downtime was written up as action lines on paper, and that paper was the view everyone had. I designed a screen that makes those downtimes easy to follow across a production line, a site, and even continents, so planning is clearer and managers can see how to optimize the setting.
+
+## Context
+
+Electrolux: 50,000+ people, 120 countries. Their manufacturing cloud program (EMC2) rolls digital solutions out across 30+ sites. The catch, in their own words: no two sites are alike, 90% of machines are unique pieces, and data is structured differently everywhere. Manufacturing excellence measurement was a top priority.
+
+Before: the action lines for a downtime were noted on paper, and the line and the managers all looked at that same sheet. Finding and filling the form took time. Operators are busy, so a lot of the time it simply did not happen. Whatever paper existed got retyped into a spreadsheet later. Planning had nothing clearer than that, and managers had little insight into how to optimize the production setting.
+
+The stakes: automated machine data alone can be wrong or miss nuance. The operator double checks and corrects it. Human in the loop is what makes the reporting reliable. So if operators do not participate, the numbers are not just incomplete. They give wrong impressions.
+
+Program leadership called adoption the biggest challenge of the whole transformation. My translation: adoption is a design problem and every screen element needs to take adoption into account.
+
+<Figure
+  src={workshop}
+  alt="Co-creation workshop. An operator, a trainer, engineers, and developers around sketches, with Ward facilitating."
+  caption="Bootcamp and co-creation workshop. The people who use the line were in the room."
+/>
+
+## Solution
+
+Make the downtime easy to improve, on one production line and across sites and continents. Planning gets one picture. Managers get insight into how to optimize the production setting.
+
+**One timeline for machines and people.** My proposal: a Gantt strip with every downtime color coded by status (UNPLANNED and UNJUSTIFIED being the analytically interesting ones), and shift changes marked as triangles on the same axis. Patterns often live where machines and humans meet.
+
+<Figure
+  src={downtimes}
+  alt="Downtimes view with a color coded timeline and a downtime justification table"
+  caption="Downtime timeline. Live UI."
+/>
+
+**One shared vocabulary.** Operators across the globe described the same downtimes differently. Thousands of free text descriptions flowed into the data lake. Together with the data architect I grouped them into one governed hierarchy: five or six top level categories, every term carrying a language independent ID with labels per language. Operators kept the words they were used to. The system kept one meaning.
+
+**Make the right way the fast way.** Operators wear gloves. No keyboard, no mouse, no patience between tasks. I borrowed the column pattern from the macOS Finder: top categories at a glance, the exact reason in two or three taps, every path landing on a governed term. A couple of clicks and the downtime is registered. Less hassle than the paper ever was.
+
+<Figure
+  src={justification}
+  alt="Downtime justification flow with a column picker for governed categories"
+  caption="Downtime justification. Live UI."
+/>
+
+**The dashboard as entry door.** Operators see their stats: OEE, gap versus target, availability, performance, quality. A red Unjustified counter nags gently. JUSTIFY buttons sit directly on the downtime rows. Zero distance between seeing a gap and closing it. Stats trigger the interest, input is one tap away.
+
+**Close the loop.** During a review an executive wondered aloud whether the rest of the factory floor could see this data too. I wireframed an Andon screen: the operator dashboard reworked for viewing at a distance. An engineer built a wireless Arduino setup, and TVs went up across the factory. The data operators feed now comes back on the wall instead of disappearing into management reports. Andon and OEE are both Toyota instruments.
+
+<Figure
+  src={dashboard}
+  alt="Operator dashboard with an OEE breakdown and downtime rows"
+  caption="Operator dashboard. Live UI."
+/>
+
+Supporting decisions in the same spirit: glove sized touch targets, per station personalization, right to left layouts for Arabic plants, Power BI templates instead of frozen reports.
+
+## Impact
+
+Before: downtime logged on paper, often skipped. After: three governed taps, gloves on.
+
+Consolidated thousands of free-text operator descriptions into about 5–6 governed categories, each term carrying a language-independent ID with labels per language. Operators kept their own words; the system kept one meaning.
+
+Piloted across 3 sites on 3 continents, Argentina included, holding up across languages and right-to-left layouts for Arabic plants.
+
+For the first time, managers could read downtime across lines, sites, and continents and see where to change the production setting. The shared vocabulary made the data comparable; the operator flow made it trustworthy; the Andon screens put it back on the floor instead of leaving it on paper.
+
+## Role
+
+Staff Product Designer within the EMC2 program, 2024 to 2025, working directly with data architects and development teams. Wide impact: the taxonomy, the operator flow, the dashboard, the Gantt, the Andon screens, and the Power BI template.
+
+## Reflection
+
+The Gantt chart was a hit. Operators could look into the future and started caring more about downtimes. The multi column finder pattern worked fast and was easy to understand across cultures, even with gloves on.
+
+Things I would do differently. I do not have any before and after results I can show to back up my work. A classic in enterprise, very hard to get real numbers quoted from management.
+
+Would push a bit more for the high end visual exploration I did instead of accepting the "it is too beautiful for a factory" view.
+
+<Figure
+  src={exploration}
+  alt="Dashboard studies laid out as separate cards, with OEE rings, performance, and quantity."
+  caption="Dashboard studies. An exploration, not the shipped screen."
+/>
+
+<Figure
+  src={colour}
+  alt="Typography and secondary colour palette, with contrast notes for headings and body text."
+  caption="Typography and secondary colour."
+/>
+
+<Figure
+  src={monthly}
+  alt="Monthly OEE trend view for operator performance tracking"
+  caption="Monthly OEE. Live UI."
+/>
+
+## Further reading
+
+Partner write-ups on the EMC2 program. I designed operator OEE and downtime measurement; other use cases were sibling squads.
+
+- [Analytics use cases at Electrolux](https://cronosaandeleie-be.translate.goog/use-cases/analytics-use-cases-electrolux?_x_tr_sl=nl&_x_tr_tl=en&_x_tr_hl=en-US&_x_tr_pto=wapp). OEE reporting section matches my work. [Original (Dutch)](https://cronosaandeleie.be/use-cases/analytics-use-cases-electrolux).
+- [EMC2 program overview](https://cronosaandeleie-be.translate.goog/use-cases/electrolux-2?_x_tr_sl=nl&_x_tr_tl=en&_x_tr_hl=en-US&_x_tr_pto=wapp). Broader platform story; not all use cases mine. [Original (Dutch)](https://cronosaandeleie.be/use-cases/electrolux-2).

@@ -1,0 +1,17 @@
+---
+interface Props {
+  value: string;
+  kind: 'mail' | 'tel';
+  /** Show the address itself. Otherwise the link keeps its label. */
+  reveal?: boolean;
+  class?: string;
+}
+
+const { value, kind, reveal = false, class: className } = Astro.props;
+const coded = [...value].map((char) => char.charCodeAt(0).toString(16)).join('.');
+---
+
+<a href={kind === 'tel' ? '#phone' : '#email'} class={className} data-contact={coded} data-kind={kind}>
+  {reveal ? <span data-contact-text>Contact</span> : <slot />}
+  <slot name="icon" />
+</a>

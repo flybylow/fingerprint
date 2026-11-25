@@ -29,22 +29,22 @@ export const siteConfig = {
 
   /** The pill above the homepage headline. Set `enabled: false` to remove it. */
   availability: {
-    enabled: true,
+    enabled: false,
     label: 'Design Engineer',
   },
 
-  /** The button at the end of the header and in the mobile menu. */
-  action: { label: 'Get in touch', href: 'mailto:ward@tabulas.eu' },
+  /** The button at the end of the header and in the mobile menu. Downloads the CV. */
+  action: { label: 'Resume', href: '/Ward-De-Muynck-CV.pdf', download: 'Ward-De-Muynck-CV.pdf' },
 
   /** A PDF in `public/`, offered on the resume page. Leave empty to hide the button. */
-  resumePdf: '',
+  resumePdf: '/Ward-De-Muynck-CV.pdf',
 
   /** The banner and preferences dialog. Set `enabled: false` to remove both. */
   cookieConsent: {
     enabled: false,
   },
 
-  /** Lives on the Next.js app, outside this Astro base. */
+  /** The Signal Portrait demo, on the Next.js app, outside this Astro base. */
   demo: { label: 'Signal Portrait', href: '/' },
 
   socials: [
@@ -55,6 +55,7 @@ export const siteConfig = {
 };
 
 export const navigation: NavLink[] = [
+  { label: 'Home', href: '/' },
   { label: 'Work', href: '/work/' },
   { label: 'About', href: '/about/' },
   { label: 'Resume', href: '/resume/' },

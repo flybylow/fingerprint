@@ -1,0 +1,166 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHead from '@/components/ui/SectionHead.astro';
+import Icon from '@/components/ui/Icon.astro';
+
+const colors = [
+  { name: '--canvas', value: '#0A0A0B', note: 'Page background' },
+  { name: '--surface', value: '#141416', note: 'Panels, cards, chips' },
+  { name: '--sunken', value: '#060608', note: 'Recessed wells' },
+  { name: '--ink', value: '#F5F3F0', note: 'Primary text' },
+  { name: '--muted', value: '#9A968F', note: 'Secondary text, labels' },
+  { name: '--line', value: 'rgba(245,243,240,0.09)', note: 'Hairline borders' },
+  { name: '--line-strong', value: 'rgba(255,93,34,0.30)', note: 'Accent hairline' },
+  { name: '--accent', value: '#FF5D22', note: 'Brand orange: CTAs, highlights' },
+  { name: '--accent-strong', value: '#FF7A3D', note: 'Accent hover' },
+  { name: '--ok', value: '#39D98A', note: 'Available / affirmative' },
+  { name: '--warn', value: '#FF3B3B', note: 'Alert / bot state' },
+];
+
+const fonts = [
+  { label: 'Hanken Grotesk', role: 'Sans: headlines & body', cssvar: '--font-sans', cls: 'font-sans', sample: 'Design the hard parts' },
+  { label: 'Instrument Serif', role: 'Serif italic: emphasis', cssvar: '--font-serif', cls: 'serif', sample: 'builds the thing' },
+  { label: 'Instrument Serif', role: 'Headline, second part', cssvar: '--accent', cls: 'serif-accent', sample: 'then I build them.' },
+  { label: 'Geist Mono', role: 'Mono: data & labels', cssvar: '--font-mono', cls: 'font-mono', sample: 'VISITOR-ID 0x8F3A' },
+];
+
+const scale = [
+  { cls: 'text-display', token: '--text-display', sample: 'Signal' },
+  { cls: 'text-headline', token: '--text-headline', sample: 'Design engineer' },
+  { cls: 'text-section', token: '--text-section', sample: 'Selected work' },
+  { cls: 'text-title', token: '--text-title', sample: 'A passport that stays with the product' },
+  { cls: 'text-lead', token: '--text-lead', sample: 'I turn dense, data-heavy screens into a system people love to use.' },
+];
+---
+
+<BaseLayout
+  title="Design system"
+  description="The tokens, type, grid, and components this portfolio is built from, matched to the Signal Portrait demo."
+  noindex
+  closing={false}
+>
+  <header class="shell pt-16 sm:pt-24">
+    <p class="rise eyebrow">Design system</p>
+    <h1 class="rise mt-6 max-w-[16ch] text-headline" style="--rise-step: 1">
+      One system, <span class="serif-accent">every page.</span>
+    </h1>
+    <p class="rise mt-6 max-w-2xl text-lead text-muted" style="--rise-step: 2">
+      The same tokens, type, grid, and motion the home page is built from. Grounded in the
+      Signal Portrait demo: a signal in the dark, orange on near-black.
+    </p>
+    <p class="rise mt-5 font-mono text-sm text-muted" style="--rise-step: 3">
+      Tokens: <span class="text-ink">src/styles/global.css</span> &middot; Reference: <span class="text-ink">docs/BRAND.md</span>
+    </p>
+  </header>
+
+  <section class="shell mt-20 sm:mt-28" aria-labelledby="color-title">
+    <SectionHead id="color-title" eyebrow="Foundations" title="Color" text="Dark-first. Orange reads as brand against near-black; hairlines and mono labels carry structure instead of heavy boxes." />
+    <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {colors.map((c) => (
+        <li class="reveal rounded-card border border-line bg-surface p-4">
+          <div class="w-full rounded-lg border border-line" style={`background: var(${c.name}); height: 4.5rem`} />
+          <p class="mt-4 font-mono text-sm text-ink">{c.name}</p>
+          <p class="font-mono text-xs text-muted">{c.value}</p>
+          <p class="mt-1 text-sm text-muted">{c.note}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="shell mt-20 sm:mt-28" aria-labelledby="type-title">
+    <SectionHead id="type-title" eyebrow="Foundations" title="Typography" text="Hanken Grotesk for headlines and body, Instrument Serif italic for a single emphatic word, Geist Mono for data and labels." />
+    <ul class="mt-10 grid gap-6 lg:grid-cols-3">
+      {fonts.map((f) => (
+        <li class="reveal rounded-card border border-line bg-surface p-6">
+          <p class="eyebrow">{f.role}</p>
+          <p class={`mt-4 text-section ${f.cls}`}>{f.sample}</p>
+          <p class="mt-4 font-mono text-xs text-muted">{f.label} &middot; {f.cssvar}</p>
+        </li>
+      ))}
+    </ul>
+    <div class="mt-10 border-t border-line">
+      {scale.map((s) => (
+        <div class="reveal flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-line py-6">
+          <p class={s.cls}>{s.sample}</p>
+          <p class="font-mono text-xs text-muted">{s.token}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="shell mt-20 sm:mt-28" aria-labelledby="grid-title">
+    <SectionHead id="grid-title" eyebrow="Foundations" title="Grid & spacing" text="A centered shell capped at 80rem with a fluid gutter. Work sits on a 2-column grid; supporting content on 3 or 4." />
+    <div class="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-6">
+      {Array.from({ length: 6 }).map(() => (
+        <div class="reveal rounded-lg border border-line bg-surface" style="height: 6rem" />
+      ))}
+    </div>
+    <p class="mt-5 font-mono text-xs text-muted">--measure 80rem &middot; --gutter clamp(1rem, 0.4rem + 2.6vw, 2.5rem) &middot; .shell</p>
+  </section>
+
+  <section class="shell mt-20 sm:mt-28" aria-labelledby="comp-title">
+    <SectionHead id="comp-title" eyebrow="Library" title="Components" text="Built once, reused on every page, the same classes the home page uses." />
+    <div class="mt-10 grid gap-10">
+      <div class="reveal border-t border-line pt-8">
+        <p class="eyebrow">Buttons</p>
+        <div class="mt-5 flex flex-wrap items-center gap-3">
+          <a class="btn btn-accent" href="#comp-title">Primary action <Icon name="arrow-right" class="icon-nudge size-4" /></a>
+          <a class="btn btn-primary" href="#comp-title">Secondary</a>
+          <a class="btn btn-ghost" href="#comp-title">Ghost</a>
+          <a class="btn btn-accent btn-sm" href="#comp-title">Small</a>
+        </div>
+      </div>
+      <div class="reveal border-t border-line pt-8">
+        <p class="eyebrow">Labels & chips</p>
+        <div class="mt-5 flex flex-wrap items-center gap-3">
+          <span class="eyebrow">Selected work</span>
+          <span class="chip">Dashboards</span>
+          <span class="chip">Interface design</span>
+          <span class="ds-tag">ai agent</span>
+        </div>
+      </div>
+      <div class="reveal border-t border-line pt-8">
+        <p class="eyebrow">Links</p>
+        <p class="mt-5 text-lead text-body">A sentence with an <a class="link" href="#comp-title">inline link</a> that leans orange on hover.</p>
+      </div>
+      <div class="reveal border-t border-line pt-8">
+        <p class="eyebrow">Hairline rows</p>
+        <ul class="mt-5 ds-rows">
+          <li class="ds-row"><div><p class="text-title">Row title</p><p class="mt-1 text-muted">A supporting line of text.</p></div><span class="ds-tag">tag</span></li>
+          <li class="ds-row"><div><p class="text-title">Another row</p><p class="mt-1 text-muted">A supporting line of text.</p></div><span class="ds-tag">tag</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell mt-20 mb-24 sm:mt-28" aria-labelledby="motion-title">
+    <SectionHead id="motion-title" eyebrow="Foundations" title="Motion" text="Calm, earned, ease-out. Content rises in on load and reveals on scroll: low amplitude, 400 to 900ms, and it honors reduced-motion." />
+    <div class="mt-10 grid gap-4 font-mono text-sm text-muted sm:grid-cols-2">
+      <p class="rounded-lg border border-line bg-surface p-5"><span class="text-ink">.rise</span> &mdash; staggered entrance on load (--rise-step)</p>
+      <p class="rounded-lg border border-line bg-surface p-5"><span class="text-ink">.reveal</span> &mdash; scroll-linked fade and lift</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .ds-tag {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 0.2rem 0.6rem;
+    white-space: nowrap;
+  }
+  .ds-rows { border-top: 1px solid var(--line); }
+  .ds-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    gap: 0.5rem 1.5rem;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+</style>

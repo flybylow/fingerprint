@@ -1,4 +1,7 @@
 ---
+import { Image } from 'astro:assets';
+import ward from '../assets/ward.jpg';
+import ContactLink from '@/components/ui/ContactLink.astro';
 import Icon from '@/components/ui/Icon.astro';
 import { about } from '@/config/about';
 import { siteConfig } from '@/config/site';
@@ -9,7 +12,7 @@ import { url } from '@/lib/url';
 
 <BaseLayout
   title="About"
-  description={`How ${siteConfig.author.name} works: turning dense, data-heavy systems into interfaces people can actually use.`}
+  description={`${siteConfig.author.name} on a twenty-year practice across industry, care, government, and shipping, and the work he makes off the clock.`}
   type="profile"
   structuredData={profileSchema(url('/about/'))}
 >
@@ -17,30 +20,29 @@ import { url } from '@/lib/url';
     <div>
       <p class="rise eyebrow">{about.eyebrow}</p>
       <h1 class="rise mt-6 max-w-[18ch] text-headline" style="--rise-step: 1">
-        {about.title} <span class="serif">{about.highlight}</span>
+        {about.title} <span class="serif-accent">{about.highlight}</span>
       </h1>
       <p class="rise mt-6 max-w-2xl text-lead text-body" style="--rise-step: 2">
         {about.text}
       </p>
       <div class="rise mt-8 flex flex-wrap gap-3" style="--rise-step: 3">
-        <a class="btn btn-primary" href={url('/resume/')}>
+        <a class="btn btn-accent" href={url('/resume/')}>
           View resume
           <Icon name="arrow-right" class="icon-nudge size-4" />
         </a>
-        <a class="btn btn-ghost" href={`mailto:${siteConfig.author.email}`}>
+        <ContactLink kind="mail" value={siteConfig.author.email} class="btn btn-ghost">
           Email me
-        </a>
+        </ContactLink>
       </div>
     </div>
-    <div class="rise relative" style="--rise-step: 2">
-      <div
-        class="grid aspect-4/5 w-full place-items-center rounded-card border border-line bg-sunken"
-        role="img"
-        aria-label={about.portraitAlt}
-      >
-        <span class="font-serif text-8xl text-accent italic">W</span>
-      </div>
-    </div>
+    <Image
+      src={ward}
+      alt={about.portraitAlt}
+      widths={[480, 720]}
+      sizes="(min-width: 64rem) 22rem, 80vw"
+      class="rise aspect-square w-full rounded-full object-cover"
+      style="--rise-step: 2"
+    />
   </header>
 
   <div class="shell mt-20 sm:mt-28">
@@ -63,7 +65,7 @@ import { url } from '@/lib/url';
     <ol class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
       {about.principles.items.map((item, index) => (
         <li class="reveal rounded-card border border-line bg-surface p-7">
-          <span class="font-serif text-3xl text-muted italic" aria-hidden="true">
+          <span class="meta" aria-hidden="true">
             {String(index + 1).padStart(2, '0')}
           </span>
           <h3 class="mt-8 text-title">{item.title}</h3>

@@ -16,6 +16,7 @@ const { eyebrow, title, text, id } = Astro.props;
       {title}
     </h2>
     {text && <p class="mt-5 text-lead text-muted">{text}</p>}
+    <slot name="description" />
   </div>
   <slot />
 </div>

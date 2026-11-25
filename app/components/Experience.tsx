@@ -200,17 +200,14 @@ export default function Experience() {
               </p>
             </>
           )}
-          <div className="cta-wrap">
-            {!started && (
-              <>
-                <button className="cta" onClick={() => reveal("human")}>
-                  Show your fingerprint <span className="cta-arrow">→</span>
-                </button>
-                <button className="cta-ghost" onClick={() => reveal("bot")}>or visit as an AI agent</button>
-              </>
-            )}
-            <a className="cta-ghost" href="/portfolio/">More about me <span className="cta-arrow">→</span></a>
-          </div>
+          {!started && (
+            <div className="cta-wrap">
+              <button className="cta" onClick={() => reveal("human")}>
+                Show your fingerprint <span className="cta-arrow">→</span>
+              </button>
+              <button className="cta-ghost" onClick={() => reveal("bot")}>or visit as an AI agent</button>
+            </div>
+          )}
         </motion.header>
 
         <AnimatePresence>

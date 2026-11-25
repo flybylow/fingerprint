@@ -9,7 +9,6 @@ const person = {
   '@id': absolute('/#person'),
   name: siteConfig.author.name,
   jobTitle: siteConfig.author.role,
-  email: `mailto:${siteConfig.author.email}`,
   url: siteConfig.siteUrl,
   sameAs: siteConfig.socials.map((social) => social.href),
 };

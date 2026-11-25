@@ -5,6 +5,7 @@ description: This website may collect limited personal information when you choo
 updated: 2026-10-08
 ---
 
+import ContactLink from '@/components/ui/ContactLink.astro';
 import { siteConfig } from '@/config/site';
 
 ## Information you share
@@ -29,4 +30,4 @@ This site may link to or rely on third-party services such as scheduling tools, 
 
 ## Contact
 
-Questions about this policy can be sent to <a href={`mailto:${siteConfig.author.email}`}>{siteConfig.author.email}</a>.
+Questions about this policy can be sent to <ContactLink kind="mail" value={siteConfig.author.email} reveal />.

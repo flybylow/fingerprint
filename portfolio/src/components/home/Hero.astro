@@ -1,44 +1,31 @@
 ---
 import Icon from '@/components/ui/Icon.astro';
 import { hero } from '@/config/home';
-import { siteConfig } from '@/config/site';
 import { url } from '@/lib/url';
 ---
 
 <section class="shell pt-14 pb-20 sm:pt-20 sm:pb-28 lg:pt-24" aria-labelledby="hero-title">
-  {siteConfig.availability.enabled && (
-    <p class="rise inline-flex items-center gap-3 rounded-full border border-line bg-surface py-1.5 pr-4 pl-1.5 text-sm text-body shadow-[0_1px_2px_rgb(18_18_17/0.04)]">
-      <span class="availability-dot" aria-hidden="true" />
-      {siteConfig.availability.label}
-    </p>
-  )}
-
-  <h1 id="hero-title" class="rise mt-8 max-w-[17ch] text-display" style="--rise-step: 1">
-    {hero.greeting} {hero.title} <span class="serif">{hero.highlight}</span>
+  <h1 id="hero-title" class="rise max-w-[16ch] text-headline" style="--rise-step: 1">
+    {hero.greeting ? `${hero.greeting} ` : ''}
+    {hero.title} <span class="serif-accent">{hero.highlight}</span>
   </h1>
 
   <div class="mt-10 grid gap-12 lg:mt-14 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
     <div class="rise" style="--rise-step: 2">
-      <p class="max-w-xl text-lead text-body">{hero.text}</p>
+      <p class="signal-sub max-w-xl">{hero.text}</p>
       <div class="mt-8 flex flex-wrap gap-3">
-        <a class="btn btn-accent" href={url(hero.primary.href)}>
+        <a class="btn hero-cta" href={url(hero.primary.href)}>
           {hero.primary.label}
           <Icon name="arrow-right" class="icon-nudge size-4" />
-        </a>
-        <a class="btn btn-ghost" href={url(hero.secondary.href)}>
-          {hero.secondary.label}
         </a>
       </div>
     </div>
 
-    <dl
-      class="rise grid grid-cols-3 gap-6 border-t border-line pt-6 sm:gap-10 lg:border-t-0 lg:pt-0"
-      style="--rise-step: 3"
-    >
+    <dl class="facts rise" style="--rise-step: 3">
       {hero.facts.map((fact) => (
-        <div class="flex flex-col-reverse gap-1">
-          <dt class="max-w-[13ch] text-sm leading-snug text-muted">{fact.label}</dt>
-          <dd class="text-section">{fact.value}</dd>
+        <div>
+          <dd class="fact-value">{fact.value}</dd>
+          <dt class="meta fact-label">{fact.label}</dt>
         </div>
       ))}
     </dl>
@@ -46,30 +33,39 @@ import { url } from '@/lib/url';
 </section>
 
 <style>
-  .availability-dot {
-    position: relative;
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 999px;
-    background: #22a55b;
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(3, 8.75rem);
+    column-gap: 1.5rem;
+    align-items: start;
+    margin: 0;
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    .availability-dot::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background: inherit;
-      animation: ping 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
-    }
+  .fact-value {
+    margin: 0;
+    color: var(--muted);
+    font-size: clamp(1.75rem, 1.4rem + 1vw, 2.25rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
   }
 
-  @keyframes ping {
-    75%,
-    100% {
-      transform: scale(2.4);
-      opacity: 0;
-    }
+  .hero-cta {
+    border-color: var(--line);
+    background: transparent;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .hero-cta:hover {
+    border-color: color-mix(in srgb, var(--ink) 22%, var(--line));
+    background: transparent;
+    color: var(--ink);
+  }
+
+  .fact-label {
+    margin-top: 0.7rem;
+    white-space: nowrap;
   }
 </style>

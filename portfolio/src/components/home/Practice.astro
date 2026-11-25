@@ -1,0 +1,73 @@
+---
+import Icon from '@/components/ui/Icon.astro';
+import { practice } from '@/config/practice';
+---
+
+<section class="shell mt-16 sm:mt-24" aria-labelledby="scope-title">
+  <h2 id="scope-title" class="text-section">{practice.title}</h2>
+  <ul class="scope-list">
+    {practice.items.map((item) => (
+      <li class="scope-item">
+        <span class="scope-mark">
+          <Icon name={item.icon} class="scope-icon" stroke={1.5} />
+        </span>
+        <div>
+          <h3 class="scope-name">{item.title}</h3>
+          <p class="scope-line">{item.text}</p>
+        </div>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .scope-list {
+    display: grid;
+    gap: 2rem 4rem;
+    margin: 1.75rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .scope-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.9rem;
+    align-items: start;
+  }
+
+  .scope-mark {
+    display: grid;
+    width: 1.85rem;
+    height: 1.85rem;
+    margin-top: 0.15rem;
+    color: var(--accent);
+  }
+
+  .scope-mark :global(.scope-icon) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .scope-name {
+    font-size: var(--text-title);
+    font-weight: 500;
+    letter-spacing: var(--text-title--letter-spacing);
+    line-height: var(--text-title--line-height);
+  }
+
+  .scope-line {
+    max-width: 28rem;
+    margin-top: 0.4rem;
+    color: var(--muted);
+    font-size: 0.975rem;
+    line-height: 1.5;
+  }
+
+  @media (min-width: 48rem) {
+    .scope-list {
+      grid-template-columns: 1fr 1fr;
+      margin-top: 2.5rem;
+    }
+  }
+</style>

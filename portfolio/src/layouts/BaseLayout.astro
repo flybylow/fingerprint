@@ -56,8 +56,8 @@ const schema = structuredData ?? websiteSchema();
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#f5f1ec" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0d0a09" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f5f3f0" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0b" media="(prefers-color-scheme: dark)" />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href={url('/favicon.svg')} />
     <link rel="canonical" href={canonical} />
@@ -144,5 +144,24 @@ const schema = structuredData ?? websiteSchema();
     </main>
     <SiteFooter closing={closing} />
     {siteConfig.cookieConsent.enabled && <CookieConsent />}
+    <script is:inline>
+      (() => {
+        if (window.__contact) return;
+        window.__contact = true;
+        document.querySelectorAll('[data-contact]').forEach((el) => {
+          const coded = el.getAttribute('data-contact');
+          if (!coded) return;
+          const value = coded
+            .split('.')
+            .map((part) => String.fromCharCode(parseInt(part, 16)))
+            .join('');
+          const kind = el.getAttribute('data-kind');
+          el.setAttribute('href', kind === 'tel' ? 'tel:' + value.replace(/[^\d+]/g, '') : 'mailto:' + value);
+          const text = el.querySelector('[data-contact-text]');
+          if (text) text.textContent = value;
+          el.removeAttribute('data-contact');
+        });
+      })();
+    </script>
   </body>
 </html>

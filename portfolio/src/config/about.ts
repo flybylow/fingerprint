@@ -1,37 +1,56 @@
 export const about = {
   eyebrow: 'About',
-  title: 'A designer who also',
-  highlight: 'builds the thing.',
-  text: 'About twenty years across factories, healthcare, and government.',
-  portraitAlt: 'Monogram for Ward De Muynck',
+  title: 'A wide practice,',
+  highlight: 'on and off the clock.',
+  text: 'Twenty years making dense systems usable, across industry, care, government, and shipping. The free time is just as mixed.',
+  portraitAlt: 'Ward De Muynck',
   sections: [
     {
-      title: 'Background',
+      title: 'Career',
       paragraphs: [
-        'The work has lived in places where a screen is part of a larger operation: a factory floor, a care process, a government service. The design problem is usually how to make a dense system legible to the person in front of it.',
-        'I sit between the design and the build. The portrait demo next to this portfolio is one example: a visual explanation, implemented.',
+        'I have been building software since CD-ROMs, mostly from the product side. The long middle of the career was inside other people’s operations: ArcelorMittal, Electrolux, Unilin, a shipping platform at ECS, a care platform for the Flemish government, a labeling tool at Robovision. I sat with the people who use the system, then turned what they actually do into one thing a team can build.',
+        'Two years ago I went back to writing the code myself. The interface now ships as the product, not as a picture passed over a wall.',
       ],
     },
     {
-      title: 'Tabulas',
+      title: 'What drives me',
       paragraphs: [
-        'Tabulas is the company I founded. It works on digital product passports: identity that stays with the product, not only with the organization that issued a record.',
+        'I get my energy from simplifying a messy problem. A diagram on a napkin first. Then a screen someone who is not a data person will actually use. I am comfortable saying I do not know yet, and I would rather show the real state than a clever report about it.',
       ],
     },
     {
-      title: 'Focus',
+      title: 'The range',
       paragraphs: [
-        'Dashboards, human-in-the-loop vision, labeling tools, and identity. Places where removing noise changes whether someone can act.',
+        'The same job keeps changing costume. Research and workshops. Interface systems. React, TypeScript, and Node. Machine vision where a person stays in control. Knowledge graphs when a spreadsheet cannot hold the relationships. I learn the domain of the people who use it, then I build the product.',
+      ],
+    },
+    {
+      title: 'Off the clock',
+      paragraphs: [
+        'I am always experimenting and learning new things, whether it is microcontrollers, 3D printing, augmented reality, or blockchain. I keep hoping to pick up something new, even in my free time.',
+        'The rest is physical. Foil surfing, nature walks, hands in clay, woodworking. It is a good way to free up the head.',
       ],
     },
   ],
   principles: {
-    title: 'Principles',
+    title: 'What I come back to',
     items: [
-      { title: 'Clarity over cleverness', text: 'If a pattern needs explaining, it needs redesigning.' },
-      { title: 'The state comes first', text: 'Show what is happening before the report that explains it.' },
-      { title: 'A person stays in the loop', text: 'When a machine proposes, the screen has to make a judgment possible.' },
-      { title: 'Design it, then build it', text: 'The interface is not finished when the picture is.' },
+      {
+        title: 'Start with the person',
+        text: 'If it does not make sense to the person using it, it is not finished.',
+      },
+      {
+        title: 'A person stays in the loop',
+        text: 'A machine can propose. Someone still has to judge.',
+      },
+      {
+        title: 'Trust before the form',
+        text: 'A record nobody believes is just another document.',
+      },
+      {
+        title: 'Make the thing',
+        text: 'Clay or code. I do not stop at the picture.',
+      },
     ],
   },
 };

@@ -1,0 +1,301 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import Icon from '@/components/ui/Icon.astro';
+
+interface Shot {
+  src: ImageMetadata;
+  alt: string;
+  caption?: string;
+}
+
+interface Props {
+  items: Shot[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="figure-row not-prose" data-figure-row>
+  <ul class="figure-row-grid">
+    {
+      items.map((item) => (
+        <li>
+          <button type="button" class="figure-row-item" data-figure-open data-caption={item.caption ?? ''}>
+            <span class="tint-panel figure-row-frame">
+              <Image
+                src={item.src}
+                alt={item.alt}
+                widths={[480, 800, 1200, 1600, 2400]}
+                sizes="(min-width: 80rem) 22rem, 32vw"
+                quality={85}
+                class="figure-row-shot"
+              />
+            </span>
+            {item.caption && <span class="figure-row-caption">{item.caption}</span>}
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+  <dialog class="figure-lightbox" data-figure-lightbox>
+    <form method="dialog" class="figure-lightbox-bar">
+      <button type="submit" class="figure-lightbox-close" value="close">Close</button>
+    </form>
+    <div class="figure-lightbox-stage">
+      <button type="button" class="figure-lightbox-nav figure-lightbox-prev" data-figure-prev hidden aria-label="Previous image">
+        <Icon name="arrow-left" class="size-4" />
+      </button>
+      <img alt="" />
+      <button type="button" class="figure-lightbox-nav figure-lightbox-next" data-figure-next hidden aria-label="Next image">
+        <Icon name="arrow-right" class="size-4" />
+      </button>
+    </div>
+    <p></p>
+  </dialog>
+</div>
+
+<script is:inline>
+  if (!window.__figureRow) {
+    window.__figureRow = true;
+    let owners = 0;
+
+    const rowOf = (dialog) =>
+      document.querySelector(`[data-figure-row][data-figure-owner="${dialog.dataset.figureOwner}"]`);
+
+    const claim = (row) => {
+      if (!row.dataset.figureOwner) {
+        owners += 1;
+        row.dataset.figureOwner = String(owners);
+        const dialog = row.querySelector('[data-figure-lightbox]');
+        if (dialog) dialog.dataset.figureOwner = row.dataset.figureOwner;
+      }
+      return document.querySelector(`[data-figure-lightbox][data-figure-owner="${row.dataset.figureOwner}"]`);
+    };
+
+    const paint = (dialog, button) => {
+      const source = button.querySelector('img');
+      const picture = dialog.querySelector('img');
+      const caption = dialog.querySelector('p');
+      const row = rowOf(dialog);
+      if (!source || !picture || !caption || !row) return;
+      const buttons = [...row.querySelectorAll('[data-figure-open]')];
+      const index = buttons.indexOf(button);
+      picture.alt = source.alt || '';
+      picture.sizes = '(min-width: 80rem) 68rem, 92vw';
+      picture.removeAttribute('src');
+      if (source.srcset) picture.srcset = source.srcset;
+      else picture.removeAttribute('srcset');
+      picture.src = source.src;
+      caption.textContent = button.getAttribute('data-caption') || '';
+      dialog.dataset.figureIndex = String(index);
+      dialog.querySelector('[data-figure-prev]').hidden = index <= 0;
+      dialog.querySelector('[data-figure-next]').hidden = index < 0 || index >= buttons.length - 1;
+    };
+
+    const step = (dialog, direction) => {
+      const row = rowOf(dialog);
+      if (!row) return;
+      const buttons = [...row.querySelectorAll('[data-figure-open]')];
+      const index = Number(dialog.dataset.figureIndex || 0) + direction;
+      if (buttons[index]) paint(dialog, buttons[index]);
+    };
+
+    document.addEventListener('click', (event) => {
+      const opener = event.target.closest('[data-figure-open]');
+      if (opener) {
+        const row = opener.closest('[data-figure-row]');
+        const dialog = row && claim(row);
+        if (!dialog) return;
+        paint(dialog, opener);
+        document.body.append(dialog);
+        if (!dialog.open) dialog.showModal();
+        return;
+      }
+
+      const nav = event.target.closest('[data-figure-prev], [data-figure-next]');
+      if (nav) {
+        event.preventDefault();
+        const dialog = nav.closest('[data-figure-lightbox]');
+        if (dialog) step(dialog, nav.hasAttribute('data-figure-next') ? 1 : -1);
+        return;
+      }
+
+      const dialog = event.target.closest('[data-figure-lightbox]');
+      if (dialog && event.target === dialog) dialog.close();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      const dialog = document.querySelector('[data-figure-lightbox][open]');
+      if (!dialog) return;
+      event.preventDefault();
+      step(dialog, event.key === 'ArrowRight' ? 1 : -1);
+    });
+
+    document.addEventListener('close', (event) => {
+      const dialog = event.target;
+      if (!dialog.matches?.('[data-figure-lightbox]')) return;
+      const picture = dialog.querySelector('img');
+      picture?.removeAttribute('src');
+      picture?.removeAttribute('srcset');
+      rowOf(dialog)?.append(dialog);
+    }, true);
+  }
+</script>
+
+<style>
+  .figure-row-grid {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .figure-row .figure-row-grid {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .figure-row .figure-row-grid > li + li {
+    margin-top: 0;
+  }
+
+  .figure-row-item {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: zoom-in;
+  }
+
+  .figure-row-item:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: var(--radius-card);
+  }
+
+  .figure-row-frame {
+    display: block;
+    overflow: hidden;
+    border-radius: var(--radius-card);
+    padding: 0.45rem;
+  }
+
+  .figure-row-shot {
+    display: block;
+    width: 100%;
+    height: 9.5rem;
+    border-radius: calc(var(--radius-card) - 0.2rem);
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  .figure-row-caption {
+    color: var(--muted);
+    font-size: 0.8rem;
+    line-height: 1.35;
+  }
+
+  .figure-lightbox {
+    width: min(68rem, calc(100vw - 2rem));
+    max-height: calc(100vh - 2rem);
+    margin: auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+  }
+
+  .figure-lightbox::backdrop {
+    background: rgb(10 10 11 / 0.86);
+  }
+
+  .figure-lightbox-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.6rem;
+  }
+
+  .figure-lightbox-close {
+    border: 0;
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--ink);
+    padding: 0.35rem 0.8rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .figure-lightbox-stage {
+    position: relative;
+  }
+
+  .figure-lightbox-nav {
+    position: absolute;
+    top: 50%;
+    z-index: 1;
+    display: grid;
+    width: 2.5rem;
+    height: 2.5rem;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--canvas) 78%, transparent);
+    color: var(--ink);
+    cursor: pointer;
+    translate: 0 -50%;
+  }
+
+  .figure-lightbox-nav:hover {
+    border-color: var(--ink);
+  }
+
+  .figure-lightbox-nav[hidden] {
+    display: none;
+  }
+
+  .figure-lightbox-prev {
+    left: 0.75rem;
+  }
+
+  .figure-lightbox-next {
+    right: 0.75rem;
+  }
+
+  .figure-lightbox img {
+    display: block;
+    max-width: 100%;
+    max-height: calc(100vh - 7rem);
+    width: auto;
+    height: auto;
+    margin-inline: auto;
+    border-radius: var(--radius-card);
+    background: var(--surface);
+    object-fit: contain;
+  }
+
+  .figure-lightbox p {
+    margin: 0.7rem 0 0;
+    color: var(--fg, #f5f3f0);
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  @media (min-width: 640px) {
+    .figure-row-shot {
+      height: 13rem;
+    }
+  }
+</style>

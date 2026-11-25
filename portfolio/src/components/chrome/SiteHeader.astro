@@ -8,38 +8,44 @@ import { url } from '@/lib/url';
 const path = Astro.url.pathname;
 const current = (href: string) => {
   const full = url(href);
+  if (href === '/') return path === full || path === full.replace(/\/$/, '') ? 'page' : undefined;
   return path === full ? 'page' : path.startsWith(full) ? 'true' : undefined;
 };
 ---
 
 <header class="site-header sticky top-0 z-40 h-(--header-h) border-b border-transparent bg-canvas">
   <div class="shell flex h-full items-center gap-4">
-    <a href={url('/')} class="flex items-center gap-2.5 rounded-lg text-[1.15rem] font-semibold tracking-[-0.03em]">
+    <a href={url('/')} class="brand">
       <Logomark />
-      <span>{siteConfig.name}</span>
+      <span class="brand-copy">
+        <span class="brand-name">{siteConfig.name}</span>
+        <span class="brand-role">{siteConfig.author.role}</span>
+      </span>
       <span class="sr-only">, home</span>
     </a>
 
     <nav aria-label="Main" class="ml-auto hidden md:block">
       <ul class="flex items-center gap-1">
-        {navigation.map((link) => (
-          <li>
-            <a href={url(link.href)} class="nav-link" aria-current={current(link.href)}>
-              {link.label}
-            </a>
-          </li>
-        ))}
-        <li>
-          <a href={siteConfig.demo.href} class="nav-link">
-            {siteConfig.demo.label}
-          </a>
-        </li>
+        {navigation
+          .filter((link) => link.href !== '/resume/')
+          .map((link) => (
+            <li>
+              <a href={url(link.href)} class="nav-link" aria-current={current(link.href)}>
+                {link.label}
+              </a>
+            </li>
+          ))}
       </ul>
     </nav>
 
     <div class="ml-auto flex items-center gap-1.5 md:ml-2">
       <ThemeToggle />
-      <a class="btn btn-primary btn-sm ml-1 hidden sm:inline-flex" href={siteConfig.action.href}>
+      <a
+        class="btn btn-primary btn-sm ml-1 hidden sm:inline-flex"
+        href={url(siteConfig.action.href)}
+        download={siteConfig.action.download}
+      >
+        <Icon name="download" class="size-4" />
         {siteConfig.action.label}
       </a>
       <button
@@ -57,9 +63,12 @@ const current = (href: string) => {
 
   <dialog id="mobile-nav" aria-label="Menu" class="mobile-nav md:hidden">
     <div class="shell flex h-(--header-h) items-center justify-between">
-      <a href={url('/')} class="flex items-center gap-2.5 text-[1.15rem] font-semibold tracking-[-0.03em]">
+      <a href={url('/')} class="brand">
         <Logomark />
-        <span>{siteConfig.name}</span>
+        <span class="brand-copy">
+          <span class="brand-name">{siteConfig.name}</span>
+          <span class="brand-role">{siteConfig.author.role}</span>
+        </span>
         <span class="sr-only">, home</span>
       </a>
       <button
@@ -74,27 +83,20 @@ const current = (href: string) => {
     </div>
     <nav aria-label="Mobile" class="shell mt-4">
       <ul class="grid">
-        <li>
-          <a href={url('/')} class="mobile-link" aria-current={path === url('/') ? 'page' : undefined}>
-            Home
-          </a>
-        </li>
-        {navigation.map((link) => (
-          <li>
-            <a href={url(link.href)} class="mobile-link" aria-current={current(link.href)}>
-              {link.label}
-            </a>
-          </li>
-        ))}
-        <li>
-          <a href={siteConfig.demo.href} class="mobile-link">
-            {siteConfig.demo.label}
-          </a>
-        </li>
+        {navigation
+          .filter((link) => link.href !== '/resume/')
+          .map((link) => (
+            <li>
+              <a href={url(link.href)} class="mobile-link" aria-current={current(link.href)}>
+                {link.label}
+              </a>
+            </li>
+          ))}
       </ul>
     </nav>
     <div class="shell mt-8">
-      <a class="btn btn-primary w-full" href={siteConfig.action.href}>
+      <a class="btn btn-primary w-full" href={url(siteConfig.action.href)} download={siteConfig.action.download}>
+        <Icon name="download" class="size-4" />
         {siteConfig.action.label}
       </a>
     </div>
@@ -133,24 +135,81 @@ const current = (href: string) => {
     }
   }
 
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    min-width: 0;
+    border-radius: 0.5rem;
+  }
+
+  .brand-copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.05rem;
+  }
+
+  .brand-name {
+    font-size: 1.15rem;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+
+  .brand-role {
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+
+  @media (min-width: 40rem) {
+    .brand-copy {
+      flex-direction: row;
+      align-items: baseline;
+      gap: 0.7rem;
+    }
+
+    .brand-role {
+      font-size: 0.8125rem;
+    }
+  }
+
   .nav-link {
+    position: relative;
     display: inline-flex;
     align-items: center;
     min-height: 2.5rem;
     padding: 0.4rem 0.9rem;
     border-radius: 999px;
-    color: var(--body);
+    color: var(--muted);
     font-size: 0.95rem;
     font-weight: 500;
-    transition:
-      color 160ms ease,
-      background-color 160ms ease;
+    transition: color 160ms ease;
   }
 
-  .nav-link:hover,
+  .nav-link:hover {
+    color: var(--ink);
+  }
+
   .nav-link[aria-current] {
     color: var(--ink);
-    background: var(--sunken);
+  }
+
+  .nav-link[aria-current]::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0.38rem;
+    width: 0.85rem;
+    height: 1.5px;
+    border-radius: 999px;
+    background: var(--accent);
+    transform: translateX(-50%);
   }
 
   .mobile-nav {
@@ -172,16 +231,16 @@ const current = (href: string) => {
     align-items: center;
     min-height: 3.75rem;
     border-bottom: 1px solid var(--line);
+    color: var(--muted);
     font-size: 1.75rem;
     font-weight: 500;
     letter-spacing: -0.03em;
   }
 
   .mobile-link[aria-current] {
-    text-decoration: underline;
-    text-decoration-color: var(--accent);
-    text-decoration-thickness: 3px;
-    text-underline-offset: 0.25em;
+    color: var(--ink);
+    box-shadow: inset 2px 0 0 var(--accent);
+    padding-left: 0.85rem;
   }
 
   @media (prefers-reduced-motion: no-preference) {

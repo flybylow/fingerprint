@@ -1,4 +1,6 @@
 ---
+import MinorWork from '@/components/home/MinorWork.astro';
+import ClientWork from '@/components/work/ClientWork.astro';
 import PageHero from '@/components/ui/PageHero.astro';
 import Pagination from '@/components/work/Pagination.astro';
 import ProjectCard from '@/components/work/ProjectCard.astro';
@@ -31,9 +33,9 @@ const title = current > 1 ? `Work, page ${current} of ${total}` : 'Work';
   }}
 >
   <PageHero
-    eyebrow={current > 1 ? `Selected work, page ${current}` : 'Selected work'}
-    title="Work from factories, models, and"
-    highlight="product identity."
+    eyebrow={current > 1 ? `All work, page ${current}` : 'All work'}
+    title="Recent work"
+    highlight="across industry, identity and AI"
   />
 
   <section class="shell mt-16 sm:mt-20" aria-label="Case studies">
@@ -44,4 +46,7 @@ const title = current > 1 ? `Work, page ${current} of ${total}` : 'Work';
     </div>
     <Pagination current={current} total={total} />
   </section>
+
+  {current === 1 && <ClientWork />}
+  {current === 1 && <MinorWork />}
 </BaseLayout>

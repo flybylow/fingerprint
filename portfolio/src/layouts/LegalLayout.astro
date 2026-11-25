@@ -24,7 +24,7 @@ const updatedDate = new Date(`${updated}T00:00:00Z`);
     <p class="rise mt-6 max-w-2xl text-lead text-body" style="--rise-step: 2">
       {description}
     </p>
-    <p class="rise mt-4 text-sm text-muted" style="--rise-step: 2">
+    <p class="rise meta mt-4" style="--rise-step: 2">
       Last updated{' '}
       <time datetime={updated}>
         {updatedDate.toLocaleDateString(siteConfig.dateLocale, { dateStyle: 'long', timeZone: 'UTC' })}
