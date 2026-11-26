@@ -141,6 +141,7 @@
 :root.dark {
   /* Matched to the Signal Portrait demo palette */
   --canvas: #0a0a0b;
+  --logo-bg: #2d2d31;
   --surface: #141416;
   --sunken: #060608;
   --line: rgba(245, 243, 240, 0.09);

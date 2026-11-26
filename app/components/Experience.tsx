@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 import Identifier from "./Identifier";
 import SignalPortrait from "./SignalPortrait";
 import SignalsPanel from "./SignalsPanel";
+import PortfolioBlob from "./PortfolioBlob";
 import { type IdentifyResult, type SmartSignal, seedFromId } from "@/lib/signals";
 import { type PortraitTone, isEnabled, playResolve, playTick, resumeIfAllowed, setBed, setEnabled } from "@/lib/audio";
 
@@ -168,6 +169,8 @@ export default function Experience() {
     <main className="stage">
       {hasPublicKey && <Identifier onReady={handleReady} />}
       <SignalPortrait className="portrait" seed={seed} revealed={resolved} bot={botActive} suspect={displaySuspect} pulse={pulse} flow={flow} target={target} />
+
+      <PortfolioBlob />
 
       <div className="overlay">
         <motion.header

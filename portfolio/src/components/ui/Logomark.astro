@@ -7,7 +7,7 @@ const { class: className = 'size-7' } = Astro.props;
 ---
 
 <svg class={className} viewBox="0 0 32 32" fill="none" aria-hidden="true">
-  <rect width="32" height="32" rx="9" fill="var(--inverse)"></rect>
+  <rect width="32" height="32" rx="9" fill="var(--logo-bg, var(--inverse))"></rect>
   <path
     d="M8.5 11 L12.2 22 L16 14.5 L19.8 22 L23.5 11"
     stroke="var(--accent)"

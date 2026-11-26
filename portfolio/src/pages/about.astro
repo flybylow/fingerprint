@@ -1,6 +1,5 @@
 ---
-import { Image } from 'astro:assets';
-import ward from '../assets/ward.jpg';
+import BlobAvatar from '@/components/home/BlobAvatar.astro';
 import ContactLink from '@/components/ui/ContactLink.astro';
 import Icon from '@/components/ui/Icon.astro';
 import { about } from '@/config/about';
@@ -35,14 +34,9 @@ import { url } from '@/lib/url';
         </ContactLink>
       </div>
     </div>
-    <Image
-      src={ward}
-      alt={about.portraitAlt}
-      widths={[480, 720]}
-      sizes="(min-width: 64rem) 22rem, 80vw"
-      class="rise aspect-square w-full rounded-full object-cover"
-      style="--rise-step: 2"
-    />
+    <div class="rise flex justify-center lg:justify-end" style="--rise-step: 2">
+      <BlobAvatar size={220} />
+    </div>
   </header>
 
   <div class="shell mt-20 sm:mt-28">
